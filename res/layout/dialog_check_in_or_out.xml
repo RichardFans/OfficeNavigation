@@ -10,47 +10,53 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/title_select_method"
+        android:text="@string/action_check_in"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#3dd" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:background="#3aa" />
 
     <RadioGroup
-        android:id="@+id/rg_select_method"
+        android:id="@+id/rg_select_in_or_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:padding="6dp" >
 
         <RadioButton
-            android:id="@+id/rb_find_desk"
+            android:id="@+id/rb_check_in"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:button="@drawable/find_office_desk"
+            android:button="@drawable/check_in"
             android:checked="true"
-            android:text="@string/find_office_desk"
+            android:gravity="center"
+            android:layout_marginRight="8dp"
+            android:text="@string/check_in"
             android:textColor="#eee" />
 
         <RadioButton
-            android:id="@+id/rb_leave_msg"
+            android:id="@+id/rb_check_out"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
             android:layout_weight="1"
-            android:button="@drawable/leave_msg"
-            android:text="@string/leave_msg"
+            android:button="@drawable/check_out"
+            android:gravity="center"
+            android:text="@string/check_out"
             android:textColor="#eee" />
+
     </RadioGroup>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal"
         android:padding="3dp" >
 

@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- 导航栏 -->
     <string name="app_name">办公室导航</string>
     <string name="action_check_in">考勤</string>
+    <string name="action_add_contact">添加联系人</string>
     <string name="action_search">搜索</string>
+    <string name="action_add_goods">添加物品</string>
+    <string name="action_add_map">新建地图</string>
+    <string name="action_set_map">设置地图</string>
     
+    
+    <!-- 对话框 -->
     <string name="title_select_method">选择操作</string>
     <string name="find_office_desk">寻找办公桌</string>
     <string name="leave_msg">给他留言</string>
 
-    
     <string name="confirm">确认</string>
     <string name="cancel">取消</string>
+
+    <string name="check_in">签到</string>
+    <string name="check_out">离开</string>
+    
+    
+    
+    
 
 </resources>

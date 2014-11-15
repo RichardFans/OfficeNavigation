@@ -3,11 +3,15 @@ package com.richard.officenavigation.fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.qozix.tileview.TileView;
 import com.richard.officenavigation.R;
+import com.richard.officenavigation.view.ClearableEditText;
 import com.richard.officenavigation.view.DespoticTileView;
 
 public class MapFragment extends BaseFragment {
@@ -38,7 +42,8 @@ public class MapFragment extends BaseFragment {
 
 		// center the frame
 		frameTo(0.5, 0.5);
-		Log.i("mytag", "map onCreateView");
+
+		setHasOptionsMenu(true);
 		return mTileMap;
 	}
 
@@ -76,4 +81,21 @@ public class MapFragment extends BaseFragment {
 		});
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.map, menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_add_map:
+			m("新建地图");
+			break;
+		case R.id.action_set_map:
+			m("设置地图");
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 }

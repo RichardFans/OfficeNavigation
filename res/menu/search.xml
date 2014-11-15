@@ -4,15 +4,14 @@
 
     <item
         android:id="@+id/action_search"
-        android:showAsAction="always|collapseActionView"
-        android:title="@string/action_search"
         android:actionLayout="@layout/action_search"
-        android:icon="@drawable/action_search"/>
-
+        android:icon="@drawable/action_search"
+        android:showAsAction="always|collapseActionView"
+        android:title="@string/action_search"/>
     <item
-        android:id="@+id/action_check_in"
+        android:id="@+id/action_add_goods"
+        android:icon="@drawable/action_add_goods"
         android:showAsAction="always"
-        android:title="@string/action_check_in"
-        android:icon="@drawable/action_check_in"/>
+        android:title="@string/action_add_goods"/>
 
 </menu>

@@ -8,6 +8,9 @@ import java.util.Map;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -15,17 +18,15 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.SimpleAdapter;
 
 import com.richard.officenavigation.R;
 
 public class HomepageFragment extends BaseFragment implements
-		OnItemClickListener, OnClickListener, OnCheckedChangeListener {
+		OnItemClickListener, OnClickListener {
 	private static final int[] PICS = { R.drawable.pic_miss_liu,
 			R.drawable.pic_miss_li, R.drawable.pic_mr_fan,
 			R.drawable.pic_mr_luo, R.drawable.pic_mr_yang,
@@ -38,10 +39,10 @@ public class HomepageFragment extends BaseFragment implements
 
 	private GridView mGvTeachers;
 
-	private Dialog mDlgSelectMethod;
-	private Button mBtnDsmConfirm, mBtnDsmCancel;
-	private EditText mEditDsmMsg;
-	private RadioGroup mRgDsmSelectMethod;
+	private Dialog mDlgSelectMethod, mDlgCheckInOrOut;
+	private Button mBtnDsmConfirm, mBtnDsmCancel, mBtnCioConfirm,
+			mBtnCioCancel;
+	private RadioGroup mRgDsmSelectMethod, mRgCioSelectMethod;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,23 +62,35 @@ public class HomepageFragment extends BaseFragment implements
 						R.id.tv_name });
 		mGvTeachers.setAdapter(adapter);
 		mGvTeachers.setOnItemClickListener(this);
+
+		setHasOptionsMenu(true);
 		return v;
 	}
 
 	private void createDialog() {
-		//
+		// 选择操作对话框
 		mDlgSelectMethod = new Dialog(getActivity());
 		mDlgSelectMethod.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View v = inflater.inflate(R.layout.dialog_select_method, null);
 		mDlgSelectMethod.setContentView(v);
 		mRgDsmSelectMethod = (RadioGroup) v.findViewById(R.id.rg_select_method);
-		mEditDsmMsg = (EditText) v.findViewById(R.id.edit_leave_msg);
 		mBtnDsmCancel = (Button) v.findViewById(R.id.btn_cancel);
 		mBtnDsmConfirm = (Button) v.findViewById(R.id.btn_confirm);
 		mBtnDsmConfirm.setOnClickListener(this);
 		mBtnDsmCancel.setOnClickListener(this);
-		mRgDsmSelectMethod.setOnCheckedChangeListener(this);
+
+		// 考勤对话框
+		mDlgCheckInOrOut = new Dialog(getActivity());
+		mDlgCheckInOrOut.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		v = inflater.inflate(R.layout.dialog_check_in_or_out, null);
+		mDlgCheckInOrOut.setContentView(v);
+		mRgCioSelectMethod = (RadioGroup) v
+				.findViewById(R.id.rg_select_in_or_out);
+		mBtnCioCancel = (Button) v.findViewById(R.id.btn_cancel);
+		mBtnCioConfirm = (Button) v.findViewById(R.id.btn_confirm);
+		mBtnCioConfirm.setOnClickListener(this);
+		mBtnCioCancel.setOnClickListener(this);
 	}
 
 	private List<? extends Map<String, ?>> getData() {
@@ -90,6 +103,24 @@ public class HomepageFragment extends BaseFragment implements
 			data.add(m);
 		}
 		return data;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.homepage, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_check_in:
+			mDlgCheckInOrOut.show();
+			break;
+		case R.id.action_add_contact:
+			m("添加联系人");
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -112,16 +143,15 @@ public class HomepageFragment extends BaseFragment implements
 			}
 		} else if (v == mBtnDsmCancel) {
 			mDlgSelectMethod.dismiss();
+		} else if (v == mBtnCioConfirm) {
+			mDlgCheckInOrOut.dismiss();
+			if (mRgCioSelectMethod.getCheckedRadioButtonId() == R.id.rb_check_in) {
+				m("签到");
+			} else {
+				m("离开");
+			}
+		} else if (v == mBtnCioCancel) {
+			mDlgCheckInOrOut.dismiss();
 		}
 	}
-
-	@Override
-	public void onCheckedChanged(RadioGroup group, int checkedId) {
-		if (checkedId == R.id.rb_leave_msg) {
-			mEditDsmMsg.setVisibility(View.VISIBLE);
-		} else if (checkedId == R.id.rb_find_desk) {
-			mEditDsmMsg.setVisibility(View.GONE);
-		}
-	}
-
 }
