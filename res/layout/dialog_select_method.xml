@@ -1,0 +1,89 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#333"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/title_select_method"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#eee" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="#3aa" />
+
+    <RadioGroup
+        android:id="@+id/rg_select_method"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/rb_find_desk"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@drawable/find_office_desk"
+            android:checked="true"
+            android:text="@string/find_office_desk"
+            android:textColor="#eee" />
+
+        <RadioButton
+            android:id="@+id/rb_leave_msg"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@drawable/leave_msg"
+            android:text="@string/leave_msg"
+            android:textColor="#eee" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/edit_leave_msg"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginTop="8dp"
+        android:background="#eee"
+        android:inputType="text"
+        android:layout_marginLeft="3dp" 
+        android:layout_marginRight="3dp" 
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:padding="8dp" >
+
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_possitive"
+            android:checked="true"
+            android:textColor="#111"
+            android:text="@string/confirm" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+             android:textColor="#111"
+            android:background="@drawable/btn_possitive"
+            android:text="@string/cancel" />
+    </LinearLayout>
+
+</LinearLayout>
