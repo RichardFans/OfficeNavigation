@@ -1,6 +1,6 @@
 package com.richard.officenavigation;
 
-import static com.richard.officenavigation.Constants.Constants.DEBUG;
+import com.richard.officenavigation.Constants.C;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -19,25 +19,22 @@ public class BaseActivity extends FragmentActivity {
 		setupViews();
 		initDatas(savedInstanceState);
 	}
-	
+
 	/**
-	 * You should do two thing:
-	 * 1. setContentView
-	 * 2. findView
+	 * You should do two thing: 1. setContentView 2. findView
 	 */
 	protected void findViews() {
 
 	}
-	
+
 	/**
-	 * Call after findView().
-	 * You should do something like:
-	 * setListener or setAdapter.
+	 * Call after findView(). You should do something like: setListener or
+	 * setAdapter.
 	 */
 	protected void setupViews() {
 
 	}
-	
+
 	/**
 	 * Call after setupViews().
 	 */
@@ -50,27 +47,27 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	protected void d(String msg) {
-		if (DEBUG)
+		if (C.DEBUG)
 			Log.d(tag, msg);
 	}
 
 	protected void i(String msg) {
-		if (DEBUG)
+		if (C.DEBUG)
 			Log.i(tag, msg);
 	}
 
 	protected void w(String msg) {
-		if (DEBUG)
+		if (C.DEBUG)
 			Log.w(tag, msg);
 	}
 
 	protected void v(String msg) {
-		if (DEBUG)
+		if (C.DEBUG)
 			Log.v(tag, msg);
 	}
 
 	protected void e(String msg) {
-		if (DEBUG)
+		if (C.DEBUG)
 			Log.e(tag, msg);
 	}
 }

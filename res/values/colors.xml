@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="manage_item_pressed">#aaa</color> 
+    <color name="manage_title_bg">#efefcc</color> 
+
+</resources>

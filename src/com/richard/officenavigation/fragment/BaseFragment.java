@@ -1,6 +1,6 @@
 package com.richard.officenavigation.fragment;
 
-import static com.richard.officenavigation.Constants.Constants.DEBUG;
+import com.richard.officenavigation.Constants.C;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -21,27 +21,27 @@ public class BaseFragment extends Fragment {
 	}
 
 	protected void d(String msg) {
-		if (DEBUG)
+		if (C.DEBUG)
 			Log.d(tag, msg);
 	}
 
 	protected void i(String msg) {
-		if (DEBUG)
+		if (C.DEBUG)
 			Log.i(tag, msg);
 	}
 
 	protected void w(String msg) {
-		if (DEBUG)
+		if (C.DEBUG)
 			Log.w(tag, msg);
 	}
 
 	protected void v(String msg) {
-		if (DEBUG)
+		if (C.DEBUG)
 			Log.v(tag, msg);
 	}
 
 	protected void e(String msg) {
-		if (DEBUG)
+		if (C.DEBUG)
 			Log.e(tag, msg);
 	}
 }

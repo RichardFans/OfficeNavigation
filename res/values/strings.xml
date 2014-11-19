@@ -7,6 +7,7 @@
     <string name="action_add_contact">添加联系人</string>
     <string name="action_search">搜索</string>
     <string name="action_add_goods">添加物品</string>
+    <string name="action_set_beacon">设置beacon</string>
     <string name="action_add_map">新建地图</string>
     <string name="action_set_map">设置地图</string>
     
@@ -22,7 +23,19 @@
     <string name="check_in">签到</string>
     <string name="check_out">离开</string>
     
-    
+    <!-- 管理界面 -->
+    <string name="title_software_setting">软件设置</string>
+    <string name="boot_start">开机启动</string>
+    <string name="receive_msg">接受消息通知</string>
+    <string name="vibration">震动提醒</string>
+    <string name="about_software">关于办公室导航</string>
+    <string name="about_us">关于我们</string>
+    <string name="feedback">意见反馈</string>
+    <string name="chk_update">检查更新</string>
+    <string name="share">分享给朋友</string>
+    <string name="title_manage_account">管理账户</string>
+    <string name="logout">注销账户</string>
+
     
     
 
