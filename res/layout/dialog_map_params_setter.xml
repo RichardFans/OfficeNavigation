@@ -1,0 +1,154 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_gray_bk"
+    android:orientation="vertical"
+    android:padding="6dp" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:scrollHorizontally="true"
+        android:text="@string/title_set_map_size"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/blue_text" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/bright_blue" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:padding="6dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:labelFor="@+id/edit_width"
+                android:text="@string/map_width_px"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white_text" />
+
+            <EditText
+                android:id="@+id/edit_width"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:background="@drawable/edit_text_bg"
+                android:ems="5"
+                android:inputType="number"
+                android:maxLength="6"
+                android:paddingLeft="6dp"
+                android:paddingTop="3dp"
+                android:text="2292"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:padding="6dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:labelFor="@+id/edit_height"
+                android:text="@string/map_height_px"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white_text" />
+
+            <EditText
+                android:id="@+id/edit_height"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:background="@drawable/edit_text_bg"
+                android:ems="5"
+                android:inputType="number"
+                android:maxLength="6"
+                android:paddingLeft="6dp"
+                android:paddingTop="3dp"
+                android:text="1310"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:padding="6dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="18dp"
+                android:gravity="center_vertical"
+                android:labelFor="@+id/edit_mm_px_scale"
+                android:text="@string/mm_px_scale"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white_text" />
+
+            <EditText
+                android:id="@+id/edit_mm_px_scale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:background="@drawable/edit_text_bg"
+                android:ems="5"
+                android:hint="@string/mm_px_scale_hint"
+                android:inputType="numberDecimal"
+                android:paddingLeft="6dp"
+                android:paddingTop="3dp"
+                android:text="5"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        android:padding="3dp" >
+
+        <Button
+            android:id="@+id/btn_confirm"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_possitive"
+            android:checked="true"
+            android:text="@string/confirm"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black_text" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_possitive"
+            android:text="@string/cancel"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black_text" />
+    </LinearLayout>
+
+</LinearLayout>

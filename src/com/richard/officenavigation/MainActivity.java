@@ -1,12 +1,16 @@
 package com.richard.officenavigation;
 
+import java.io.File;
+
 import android.app.ActionBar;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.MenuItem;
 
+import com.richard.officenavigation.Constants.C;
 import com.richard.officenavigation.adapter.BottomTabAdapter;
 import com.richard.officenavigation.fragment.HomepageFragment;
 import com.richard.officenavigation.fragment.ManageFragment;
@@ -17,9 +21,9 @@ import com.viewpagerindicator.CustomIconPosTabPageIndicator;
 
 public class MainActivity extends BaseActivity implements OnPageChangeListener {
 	private static final int HOME_PAGE_INDEX = 0;
-	private static final int SEARCH_PAGE_INDEX = 1;
-	private static final int MAP_PAGE_INDEX = 2;
-	private static final int MANAGE_PAGE_INDEX = 3;
+//	private static final int SEARCH_PAGE_INDEX = 1;
+//	private static final int MAP_PAGE_INDEX = 2;
+//	private static final int MANAGE_PAGE_INDEX = 3;
 
 	private static final String[] TITLES = new String[] { "首页", "寻找", "地图",
 			"管理" };
@@ -54,6 +58,22 @@ public class MainActivity extends BaseActivity implements OnPageChangeListener {
 	}
 
 	@Override
+	protected void initDatas(Bundle savedInstanceState) {
+		ensureAppDirExists();
+	}
+
+	private void ensureAppDirExists() {
+		File appDir = new File(C.APP_FOLDER);
+		if (!appDir.exists()) {
+			appDir.mkdir();
+		}
+		File mapDir = new File(appDir.getAbsolutePath() + File.separator + C.map.DIR);
+		if (!mapDir.exists()) {
+			mapDir.mkdir();
+		}	
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
@@ -79,7 +99,7 @@ public class MainActivity extends BaseActivity implements OnPageChangeListener {
 	public void onPageScrollStateChanged(int state) {
 
 	}
-	
+
 	@Override
 	public void onPageScrolled(int position, float positionOffset,
 			int positionOffsetPixels) {

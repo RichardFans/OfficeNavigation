@@ -2,12 +2,9 @@ package com.richard.officenavigation.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
-import com.qozix.tileview.TileView;
-
-public class DespoticTileView extends TileView {
+public class DespoticTileView extends MapTileView {
 
 	public DespoticTileView(Context context, AttributeSet attrs) {
 		super(context);

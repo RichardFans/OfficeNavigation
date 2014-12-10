@@ -3,5 +3,15 @@
 
     <color name="manage_item_pressed">#aaa</color> 
     <color name="manage_title_bg">#efefcc</color> 
+    
+    <color name="black_text">#121</color>
+    <color name="blue_text">#3dd</color>
+    <color name="white_text">#eee</color>
 
+    
+    <color name="dark_gray_bk">#333</color>
+    <color name="white_bk">#eee</color>
+
+    <color name="bright_blue">#3aa</color>
+    <color name="selection_background_color">#FEBB20</color>
 </resources>

@@ -14,8 +14,8 @@
         android:title="@string/action_add_map"/>
     <item
         android:id="@+id/action_set_map"
-        android:icon="@drawable/action_set_map"
+        android:icon="@drawable/action_manage_map"
         android:showAsAction="always"
-        android:title="@string/action_set_map"/>
+        android:title="@string/action_manage_map"/>
 
 </menu>

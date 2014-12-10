@@ -1,5 +1,7 @@
 package com.viewpagerindicator;
 
+import com.richard.officenavigation.R;
+
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;

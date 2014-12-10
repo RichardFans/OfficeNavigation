@@ -1,0 +1,33 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.richard.officenavigation.CreateMapActivity" >
+
+    <item
+        android:id="@+id/action_add_node"
+        android:icon="@drawable/action_manage_node"
+        android:showAsAction="always"
+        android:checkable="true"
+        android:checked="false"
+        android:title="@string/action_add_node"/>
+    <item
+        android:id="@+id/action_add_path"
+        android:icon="@drawable/action_manage_path"
+        android:showAsAction="always"
+        android:title="@string/action_add_path"/>
+    <item
+        android:id="@+id/action_prev_step"
+        android:icon="@drawable/action_prev_step"
+        android:showAsAction="always"
+        android:title="@string/action_prev_step"/>
+    <item
+        android:id="@+id/action_next_step"
+        android:icon="@drawable/action_next_step"
+        android:showAsAction="always"
+        android:title="@string/action_next_step"/>
+    
+    <item
+        android:id="@+id/action_done"
+        android:showAsAction="always"
+        android:title="@string/action_done"/>
+
+</menu>

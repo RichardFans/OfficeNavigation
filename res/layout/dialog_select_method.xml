@@ -2,7 +2,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#333"
+    android:background="@color/dark_gray_bk"
     android:orientation="vertical"
     android:padding="6dp" >
 
@@ -12,14 +12,14 @@
         android:layout_marginTop="8dp"
         android:text="@string/title_select_method"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#3dd" />
+        android:textColor="@color/blue_text" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:layout_marginBottom="12dp"
         android:layout_marginTop="8dp"
-        android:background="#3aa" />
+        android:background="@color/bright_blue" />
 
     <RadioGroup
         android:id="@+id/rg_select_method"
@@ -35,7 +35,7 @@
             android:button="@drawable/find_office_desk"
             android:checked="true"
             android:text="@string/find_office_desk"
-            android:textColor="#eee" />
+            android:textColor="@color/white_text" />
 
         <RadioButton
             android:id="@+id/rb_leave_msg"
@@ -44,7 +44,7 @@
             android:layout_weight="1"
             android:button="@drawable/leave_msg"
             android:text="@string/leave_msg"
-            android:textColor="#eee" />
+            android:textColor="@color/white_text" />
     </RadioGroup>
 
     <LinearLayout
@@ -56,6 +56,7 @@
 
         <Button
             android:id="@+id/btn_confirm"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="36dp"
             android:layout_marginRight="10dp"
@@ -63,17 +64,20 @@
             android:background="@drawable/btn_possitive"
             android:checked="true"
             android:text="@string/confirm"
-            android:textColor="#111" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black_text" />
 
         <Button
             android:id="@+id/btn_cancel"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="36dp"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:background="@drawable/btn_possitive"
             android:text="@string/cancel"
-            android:textColor="#111" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black_text" />
     </LinearLayout>
 
 </LinearLayout>

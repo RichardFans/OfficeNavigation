@@ -9,20 +9,43 @@
     <string name="action_add_goods">添加物品</string>
     <string name="action_set_beacon">设置beacon</string>
     <string name="action_add_map">新建地图</string>
-    <string name="action_set_map">设置地图</string>
-    
-    
+    <string name="action_manage_map">地图管理</string>
+    <string name="action_add_node">添加节点</string>
+    <string name="action_del_node">删除节点</string>
+    <string name="action_add_path">添加路径</string>
+    <string name="action_del_path">删除路径</string>
+    <string name="action_prev_step">上一步</string>
+    <string name="action_next_step">下一步</string>
+    <string name="action_set_cur_map">使用该地图</string>
+    <string name="action_done">完成</string>
+
     <!-- 对话框 -->
     <string name="title_select_method">选择操作</string>
+    <string name="title_set_map_size">设置所选地图的原始尺寸</string>
+    <string name="map_width_px">像素宽度</string>
+    <string name="map_height_px">像素高度</string>
+    <string name="mm_px_scale">尺寸像素比</string>
+    <string name="mm_px_scale_hint">单位(mm/px)</string>
     <string name="find_office_desk">寻找办公桌</string>
     <string name="leave_msg">给他留言</string>
-
     <string name="confirm">确认</string>
     <string name="cancel">取消</string>
-
     <string name="check_in">签到</string>
     <string name="check_out">离开</string>
-    
+    <string name="title_selected_map_folder">选择地图所在目录</string>
+    <string name="title_selected_map">选择需要修改设置的地图</string>
+    <string name="nav_up">向上</string>
+    <string name="delete">删除</string>
+
+    <!-- 弹出Callout -->
+    <string name="title_input_node_name">输入节点名称</string>
+    <string name="title_path_from">选为路径起点</string>
+    <string name="title_path_to">选为路径终点</string>
+    <string name="title_node_info">节点信息</string>
+
+    <!-- 地图管理 -->
+    <string name="create_map">创建地图</string>
+
     <!-- 管理界面 -->
     <string name="title_software_setting">软件设置</string>
     <string name="boot_start">开机启动</string>
@@ -35,8 +58,5 @@
     <string name="share">分享给朋友</string>
     <string name="title_manage_account">管理账户</string>
     <string name="logout">注销账户</string>
-
-    
-    
 
 </resources>

@@ -16,9 +16,21 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-    
+
     <style name="StyledIndicators" parent="AppBaseTheme">
         <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
+    </style>
+
+    <style name="ManageMap" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarWidgetTheme">@style/ManageMapActionBar</item>
+    </style>
+
+    <style name="ManageMapActionBar" parent="@android:style/Theme.Holo">
+        <item name="android:radioButtonStyle">@style/RadioButtonTheme</item>
+    </style>
+
+    <style name="RadioButtonTheme" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:button">@drawable/dropdown_checkbox</item>
     </style>
 
     <style name="CustomTabPageIndicator" parent="Widget.TabPageIndicator">
@@ -37,6 +49,6 @@
 
     <style name="CustomTabPageIndicator.Text" parent="android:TextAppearance.Medium">
         <item name="android:typeface">monospace</item>
-    </style>    
+    </style>
 
 </resources>

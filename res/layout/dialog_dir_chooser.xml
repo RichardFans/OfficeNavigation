@@ -1,0 +1,103 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_gray_bk" >
+
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        android:padding="3dp" >
+
+        <Button
+            android:id="@+id/btn_confirm"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_possitive"
+            android:text="@string/confirm"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black_text" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_possitive"
+            android:text="@string/cancel"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black_text" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/directoryInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" >
+
+        <TextView
+            android:id="@+id/tv_selected_folder_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="6dp"
+            android:text="@string/title_selected_map_folder"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/blue_text"
+            android:textStyle="bold" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_selected_folder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/tv_selected_folder_title"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="3dp"
+            android:ellipsize="start"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="@color/white_text" />
+
+        <ImageButton
+            android:id="@+id/btn_nav_up"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/borderless_button"
+            android:contentDescription="@string/nav_up"
+            android:src="@drawable/navigation_up" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_below="@id/tv_selected_folder"
+            android:background="@color/bright_blue" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/directoryList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_above="@id/footer"
+        android:layout_below="@id/directoryInfo"
+        android:divider="#888"
+        android:dividerHeight="1dp" />
+
+</RelativeLayout>

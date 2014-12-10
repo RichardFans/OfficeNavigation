@@ -2,6 +2,7 @@ package com.richard.officenavigation.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -9,7 +10,6 @@ import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.widget.EditText;
 
-import static com.richard.utils.Strings.isNotEmpty;
 import com.richard.officenavigation.adapter.TextWatcherAdapter;
 import com.richard.officenavigation.adapter.TextWatcherAdapter.TextWatcherListener;
 
@@ -88,7 +88,7 @@ public class ClearableEditText extends EditText implements OnTouchListener,
 	@Override
 	public void onFocusChange(View v, boolean hasFocus) {
 		if (hasFocus) {
-			setClearIconVisible(isNotEmpty(getText()));
+			setClearIconVisible(!TextUtils.isEmpty(getText()));
 		} else {
 			setClearIconVisible(false);
 		}
@@ -100,7 +100,7 @@ public class ClearableEditText extends EditText implements OnTouchListener,
 	@Override
 	public void onTextChanged(EditText view, String text) {
 		if (isFocused()) {
-			setClearIconVisible(isNotEmpty(text));
+			setClearIconVisible(!TextUtils.isEmpty(text));
 		}
 	}
 
