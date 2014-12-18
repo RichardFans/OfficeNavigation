@@ -13,14 +13,14 @@ import com.qozix.tileview.TileView;
 import com.richard.officenavigation.R;
 import com.richard.officenavigation.dao.INode;
 
-public class AddPathCallout extends BaseMapCallout {
-	private onConfirmPathAddListener mListener;
+public class FindPathCallout extends BaseMapCallout {
+	private onConfirmPathListener mListener;
 	private INode mNodeFrom, mNodeTo;
 	private boolean mIsStageFrom;
 	private TextView mTitleView;
 	private Button mBtnCancel;
 
-	public AddPathCallout(Context context, TileView mapView) {
+	public FindPathCallout(Context context, TileView mapView) {
 		super(context, mapView);
 		mIsStageFrom = true;
 		LinearLayout layout = new LinearLayout(context);
@@ -66,11 +66,14 @@ public class AddPathCallout extends BaseMapCallout {
 			@Override
 			public void onClick(View v) {
 				if (mIsStageFrom) {
+					if (mListener != null)
+						FindPathCallout.this.mListener.onConfirmFrom(
+								FindPathCallout.this, mNodeFrom);
 					setPathFromStage(false);
 				} else {
 					if (mListener != null)
-						AddPathCallout.this.mListener.onConfirmPathAdd(
-								AddPathCallout.this, mNodeFrom, mNodeTo);
+						FindPathCallout.this.mListener.onConfirmTo(
+								FindPathCallout.this, mNodeFrom, mNodeTo);
 					setPathFromStage(true);
 				}
 				dismiss();
@@ -81,18 +84,25 @@ public class AddPathCallout extends BaseMapCallout {
 
 			@Override
 			public void onClick(View v) {
+				if (mListener != null)
+					FindPathCallout.this.mListener.onCancelFrom(
+							FindPathCallout.this, mNodeFrom);
 				setPathFromStage(true);
 				dismiss();
 			}
 		});
 	}
 
-	public void setOnConfirmPathAddListener(onConfirmPathAddListener listener) {
+	public void setOnConfirmPathListener(onConfirmPathListener listener) {
 		mListener = listener;
 	}
 
-	public static interface onConfirmPathAddListener {
-		public void onConfirmPathAdd(View callout, INode from, INode to);
+	public static interface onConfirmPathListener {
+		public void onConfirmFrom(View callout, INode from);
+
+		public void onConfirmTo(View callout, INode from, INode to);
+
+		public void onCancelFrom(View callout, INode from);
 	}
 
 	public void setFrom(INode node) {

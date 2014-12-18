@@ -30,7 +30,8 @@ public class INodeDao extends AbstractDao<INode, Long> {
         public final static Property X = new Property(1, long.class, "x", false, "X");
         public final static Property Y = new Property(2, long.class, "y", false, "Y");
         public final static Property Name = new Property(3, String.class, "name", false, "NAME");
-        public final static Property MapId = new Property(4, long.class, "mapId", false, "MAP_ID");
+        public final static Property Visible = new Property(4, boolean.class, "visible", false, "VISIBLE");
+        public final static Property MapId = new Property(5, long.class, "mapId", false, "MAP_ID");
     };
 
     private DaoSession daoSession;
@@ -54,7 +55,8 @@ public class INodeDao extends AbstractDao<INode, Long> {
                 "'X' INTEGER NOT NULL ," + // 1: x
                 "'Y' INTEGER NOT NULL ," + // 2: y
                 "'NAME' TEXT NOT NULL ," + // 3: name
-                "'MAP_ID' INTEGER NOT NULL );"); // 4: mapId
+                "'VISIBLE' INTEGER NOT NULL ," + // 4: visible
+                "'MAP_ID' INTEGER NOT NULL );"); // 5: mapId
     }
 
     /** Drops the underlying database table. */
@@ -75,7 +77,8 @@ public class INodeDao extends AbstractDao<INode, Long> {
         stmt.bindLong(2, entity.getX());
         stmt.bindLong(3, entity.getY());
         stmt.bindString(4, entity.getName());
-        stmt.bindLong(5, entity.getMapId());
+        stmt.bindLong(5, entity.getVisible() ? 1l: 0l);
+        stmt.bindLong(6, entity.getMapId());
     }
 
     @Override
@@ -98,7 +101,8 @@ public class INodeDao extends AbstractDao<INode, Long> {
             cursor.getLong(offset + 1), // x
             cursor.getLong(offset + 2), // y
             cursor.getString(offset + 3), // name
-            cursor.getLong(offset + 4) // mapId
+            cursor.getShort(offset + 4) != 0, // visible
+            cursor.getLong(offset + 5) // mapId
         );
         return entity;
     }
@@ -110,7 +114,8 @@ public class INodeDao extends AbstractDao<INode, Long> {
         entity.setX(cursor.getLong(offset + 1));
         entity.setY(cursor.getLong(offset + 2));
         entity.setName(cursor.getString(offset + 3));
-        entity.setMapId(cursor.getLong(offset + 4));
+        entity.setVisible(cursor.getShort(offset + 4) != 0);
+        entity.setMapId(cursor.getLong(offset + 5));
      }
     
     /** @inheritdoc */

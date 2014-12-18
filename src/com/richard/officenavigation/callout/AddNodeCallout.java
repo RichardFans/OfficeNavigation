@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -15,9 +16,10 @@ import com.richard.officenavigation.R;
 
 public class AddNodeCallout extends BaseMapCallout {
 	private EditText mEditNodeName;
+	private CheckBox mCbVisible;
 	private onConfirmNodeAddListener mListener;
 	private double x, y;
-	
+
 	public AddNodeCallout(Context context, TileView mapView) {
 		super(context, mapView);
 		LinearLayout layout = new LinearLayout(context);
@@ -29,7 +31,8 @@ public class AddNodeCallout extends BaseMapCallout {
 		setContentView(layout, labelLayout);
 
 		TextView titleView = new TextView(getContext());
-		titleView.setTextColor(0xFFFFFFFF);
+		titleView.setTextColor(getContext().getResources().getColor(
+				R.color.white_text));
 		titleView.setTextSize(16);
 		titleView.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
 		titleView.setText(R.string.title_input_node_name);
@@ -49,6 +52,13 @@ public class AddNodeCallout extends BaseMapCallout {
 		params.setMargins(0, 0, 0, 8);
 		layout.addView(mEditNodeName, params);
 
+		mCbVisible = new CheckBox(getContext());
+		mCbVisible.setText(R.string.cb_visible);
+		mCbVisible.setTextColor(getContext().getResources().getColor(
+				R.color.white_text));
+		mCbVisible.setButtonDrawable(R.drawable.dropdown_checkbox);
+		layout.addView(mCbVisible, params);
+
 		Button confirmBtn = new Button(getContext());
 		confirmBtn.setBackground(getContext().getResources().getDrawable(
 				R.drawable.btn_possitive));
@@ -63,7 +73,7 @@ public class AddNodeCallout extends BaseMapCallout {
 				if (mListener != null) {
 					AddNodeCallout.this.mListener.onConfirmNodeAdd(
 							AddNodeCallout.this, mEditNodeName.getText()
-									.toString(), x, y);
+									.toString(), x, y, mCbVisible.isChecked());
 				}
 				dismiss();
 			}
@@ -77,12 +87,17 @@ public class AddNodeCallout extends BaseMapCallout {
 	public static interface onConfirmNodeAddListener {
 		/**
 		 * 
-		 * @param callout 显示弹窗
-		 * @param name 添加node的名称
-		 * @param x 添加node的x坐标（相对值）
-		 * @param y 添加node的y坐标（相对值）
+		 * @param callout
+		 *            显示弹窗
+		 * @param name
+		 *            添加node的名称
+		 * @param x
+		 *            添加node的x坐标（相对值）
+		 * @param y
+		 *            添加node的y坐标（相对值）
 		 */
-		public void onConfirmNodeAdd(View callout, String name, double x, double y);
+		public void onConfirmNodeAdd(View callout, String name, double x,
+				double y, boolean visible);
 	}
 
 	public void setPos(double x, double y) {

@@ -76,6 +76,7 @@ public class ManageMapActivity extends BaseActivity implements
 		Bundle e = getIntent().getExtras();
 		Long id = e.getLong(C.map.EXTRA_SELECTED_MAP_ID);
 		mTileMap.setAdapter(new IMapAdapter(this, id));
+		mTileMap.setupMapDefault(false);
 
 		Paint paint = mTileMap.getPathPaint();
 		paint.setShadowLayer(4, 2, 2, 0x66000000);
@@ -189,6 +190,8 @@ public class ManageMapActivity extends BaseActivity implements
 							setResult(RESULT_CANCELED);
 						}
 						dialog.dismiss();
+						mDaoSession.clear();
+						mDaoSession = null;
 						finish();
 					}
 				}).show();
@@ -286,7 +289,7 @@ public class ManageMapActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onConfirmNodeAdd(View callout, String name, double x, double y) {
+	public void onConfirmNodeAdd(View callout, String name, double x, double y, boolean visible) {
 		if (name.equals("")) {
 			m("节点名称不能为空！");
 			return;
@@ -297,6 +300,7 @@ public class ManageMapActivity extends BaseActivity implements
 		node.setName(name);
 		node.setX((long) (x * mMap.getScale()));
 		node.setY((long) (y * mMap.getScale()));
+		node.setVisible(visible);
 		node.setMapId(mMap.getId());
 		List<INode> nodes = nodeDao
 				.queryBuilder()
@@ -308,9 +312,8 @@ public class ManageMapActivity extends BaseActivity implements
 			return;
 		}
 
-		d("加入节点: " + name + ", x, y = " + x + ", " + y);
-		nodeDao.insert(node);
-
+		long id = nodeDao.insert(node);
+		d("加入节点: " + name + "(" + id + "), x, y = " + x + ", " + y);		
 		// 添加一个mark
 		ImageView marker = new ImageView(this);
 		marker.setImageResource(R.drawable.map_node_icon);
@@ -416,7 +419,7 @@ public class ManageMapActivity extends BaseActivity implements
 		@Override
 		public void onMarkerTap(View view, int x, int y) {
 			double scale = mTileMap.getScale();
-			if (mCalloutAddPath.IsPathFromStage()) {
+			if (mCalloutAddPath.isPathFromStage()) {
 				mCalloutAddPath.setFrom((INode) view.getTag());
 				mTileMap.addCallout(mCalloutAddPath, x / scale, y / scale);
 			} else {

@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.richard.officenavigation.CreateMapActivity" >
+
+    <item
+        android:id="@+id/menu_mangage_map"
+        android:icon="@drawable/action_manage_beacon"
+        android:showAsAction="always|withText"
+        android:title="@string/action_manage_beacon">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/action_add_beacon"
+                    android:showAsAction="ifRoom|withText"
+                    
+                    android:title="@string/action_add_beacon"/>
+                <item
+                    android:id="@+id/action_del_beacon"
+                    android:checked="true"
+                    android:showAsAction="ifRoom|withText"
+                    android:title="@string/action_del_beacon"/>
+            </group>
+            <item
+                android:id="@+id/action_done"
+                android:showAsAction="ifRoom|withText"
+                android:title="@string/action_done"/>
+        </menu>
+    </item>
+
+</menu>

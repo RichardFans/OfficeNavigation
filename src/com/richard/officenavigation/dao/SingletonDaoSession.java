@@ -26,13 +26,4 @@ public class SingletonDaoSession {
 		}
 		return mDaoSession;
 	}
-	
-	public static SQLiteDatabase getDb(Context context) {
-		if (mDb == null) {
-			synchronized (SingletonDaoSession.class) {
-				new SingletonDaoSession(context);
-			}
-		}
-		return mDb;
-	}
 }

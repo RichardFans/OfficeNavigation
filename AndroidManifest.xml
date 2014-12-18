@@ -38,6 +38,12 @@
             android:theme="@style/ManageMap"
             android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
+        <activity
+            android:name=".ManageBeaconActivity"
+            android:label="@string/action_manage_beacon"
+            android:theme="@style/ManageMap"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
+        </activity>
     </application>
 
 </manifest>

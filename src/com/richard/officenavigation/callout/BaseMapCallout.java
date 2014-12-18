@@ -25,8 +25,8 @@ public class BaseMapCallout extends RelativeLayout {
 	public static final int NUB_HEIGHT = 15;
 	private FrameLayout mBubble;
 	private Nub mNub;
-	private TileView mTileMap;
 	private GradientDrawable mBgTop, mBgBottom;
+	protected TileView mTileMap;
 
 	public BaseMapCallout(Context context, TileView tileMap) {
 		super(context);

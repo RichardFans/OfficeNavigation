@@ -12,7 +12,7 @@ import com.richard.officenavigation.R;
 import com.richard.officenavigation.view.ClearableEditText;
 import com.richard.officenavigation.view.ClearableEditText.LeftDrawableListener;
 
-public class SearchFragment extends BaseFragment implements LeftDrawableListener {
+public class SearchFragment extends TabPagerFragment implements LeftDrawableListener {
 
 	
 	@Override

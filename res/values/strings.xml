@@ -14,6 +14,10 @@
     <string name="action_del_node">删除节点</string>
     <string name="action_add_path">添加路径</string>
     <string name="action_del_path">删除路径</string>
+    <string name="action_manage_beacon">信标管理</string>
+    <string name="action_add_beacon">添加信标</string>
+    <string name="action_del_beacon">删除信标</string>
+    <string name="action_mod_beacon">修改信标</string>
     <string name="action_prev_step">上一步</string>
     <string name="action_next_step">下一步</string>
     <string name="action_set_cur_map">使用该地图</string>
@@ -39,9 +43,22 @@
 
     <!-- 弹出Callout -->
     <string name="title_input_node_name">输入节点名称</string>
-    <string name="title_path_from">选为路径起点</string>
-    <string name="title_path_to">选为路径终点</string>
+    <string name="title_path_from">选为起点</string>
+    <string name="title_path_to">选为终点</string>
     <string name="title_node_info">节点信息</string>
+    <string name="title_beacon_info">信标信息</string>
+    <string name="cb_visible">节点可见</string>
+    <string name="beacon_label_uuid">UUID</string>
+    <string name="beacon_uuid_part1">E2C56DB5</string>
+    <string name="beacon_uuid_part2">DFFB</string>
+    <string name="beacon_uuid_part3">48D2</string>
+    <string name="beacon_uuid_part4">B060</string>
+    <string name="beacon_uuid_part5">D0F5A71096E0</string>
+    <string name="beacon_major">0000</string>
+    <string name="beacon_label_major">major</string>
+    <string name="beacon_label_minor">minor</string>
+    <string name="beacon_minor">0001</string>
+    <string name="beacon_uuid_separator">-</string>
 
     <!-- 地图管理 -->
     <string name="create_map">创建地图</string>

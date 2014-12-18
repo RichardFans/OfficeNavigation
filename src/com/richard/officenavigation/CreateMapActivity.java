@@ -98,6 +98,7 @@ public class CreateMapActivity extends BaseActivity implements
 		map.setWidth(e.getLong(C.map.EXTRA_MAP_PX_WIDTH));
 		map.setHeight(e.getLong(C.map.EXTRA_MAP_PX_HEIGHT));
 		mTileMap.setAdapter(new IMapAdapter(this, map));
+		mTileMap.setupMapDefault(false);
 
 		Paint paint = mTileMap.getPathPaint();
 		paint.setShadowLayer(4, 2, 2, 0x66000000);
@@ -334,7 +335,7 @@ public class CreateMapActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onConfirmNodeAdd(View callout, String name, double x, double y) {
+	public void onConfirmNodeAdd(View callout, String name, double x, double y, boolean visible) {
 		if (name.equals("")) {
 			m("节点名称不能为空！");
 			return;
@@ -345,6 +346,7 @@ public class CreateMapActivity extends BaseActivity implements
 		node.setName(name);
 		node.setX((long) (x * mMap.getScale()));
 		node.setY((long) (y * mMap.getScale()));
+		node.setVisible(visible);
 		node.setMapId(mMap.getId());
 		List<INode> nodes = nodeDao
 				.queryBuilder()
@@ -464,7 +466,7 @@ public class CreateMapActivity extends BaseActivity implements
 		@Override
 		public void onMarkerTap(View view, int x, int y) {
 			double scale = mTileMap.getScale();
-			if (mCalloutAddPath.IsPathFromStage()) {
+			if (mCalloutAddPath.isPathFromStage()) {
 				mCalloutAddPath.setFrom((INode) view.getTag());
 				mTileMap.addCallout(mCalloutAddPath, x / scale, y / scale);
 			} else {

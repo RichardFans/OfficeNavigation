@@ -1,15 +1,20 @@
 package com.richard.officenavigation.view;
 
 import java.io.File;
+import java.util.List;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 
 import com.qozix.tileview.TileView;
 import com.qozix.tileview.graphics.BitmapDecoder;
 import com.qozix.tileview.graphics.BitmapDecoderFile;
+import com.qozix.tileview.markers.MarkerEventListener;
 import com.richard.officenavigation.adapter.BaseMapAdapter;
 import com.richard.officenavigation.callout.BaseMapCallout;
 import com.richard.utils.Views;
@@ -18,8 +23,16 @@ public class MapTileView extends TileView {
 	private static final int DEFAULT_CALLOUT_WIDTH = 128;
 	private static final int DEFAULT_CALLOUT_HEIGHT = 118;
 	private BaseMapAdapter mAdapter;
-	private BaseMapCallout mCallout;
-	private double mCalloutX, mCalloutY;
+	private onNodeClickListener mNodeClickListener;
+	private MarkerEventListener mNodeMarkerListener = new MarkerEventListener() {
+
+		@Override
+		public void onMarkerTap(View view, int x, int y) {
+			if (mNodeClickListener != null) {
+				mNodeClickListener.onNodeClick(view.getTag(), x, y);
+			}
+		}
+	};
 
 	public MapTileView(Context context, AttributeSet attrs) {
 		this(context);
@@ -31,14 +44,13 @@ public class MapTileView extends TileView {
 
 	public void setAdapter(BaseMapAdapter adaper) {
 		mAdapter = adaper;
-		setupMapDefault();
 	}
 
 	public BaseMapAdapter getAdapter() {
 		return mAdapter;
 	}
 
-	private void setupMapDefault() {
+	public void setupMapDefault(boolean drawNodes) {
 		String path = mAdapter.getSrc();
 		int width = mAdapter.getWidth().intValue();
 		int height = mAdapter.getHeight().intValue();
@@ -60,35 +72,43 @@ public class MapTileView extends TileView {
 				path + File.separator + "sample.jpg");
 		addDetailLevel(0.125f, path + File.separator + "125/%col%_%row%.jpg",
 				path + File.separator + "sample.jpg");
-
+		refresh();
 		setScale(0);
-		frameTo(width / 2, height / 2);
+
+		if (drawNodes)
+			setupNodeViews();
+
+		moveToAndCenter(width / 2, height / 2);
+	}
+
+	private void setupNodeViews() {
+		List<View> views = mAdapter.getViews();
+		for (View view : views) {
+			PointF pos = mAdapter.getNodePos(view.getTag());
+			addMarker(view, pos.x, pos.y, -0.1f, -0.5f);
+		}
+		addMarkerEventListener(mNodeMarkerListener);
+	}
+
+	public void clearNodeViews() {
+		List<View> views = mAdapter.getViews();
+		for (View view : views) {
+			removeMarker(view);
+		}
+		removeMarkerEventListener(mNodeMarkerListener);
 	}
 
 	public BaseMapCallout addCallout(BaseMapCallout callout, double x, double y) {
-		mCallout = callout;
-		mCalloutX = x;
-		mCalloutY = y;
-		return addCallout().transitionIn();
-	}
-
-	// 368, 340
-	private BaseMapCallout addCallout() {
 		int gravity = 0;
 		float anchorX, anchorY;
 		Point size = new Point();
-		Point pos = translate(mCalloutX, mCalloutY);
+		Point pos = translate(x, y);
 		pos.x = (int) (pos.x * getScale() - getScrollX());
 		pos.y = (int) (pos.y * getScale() - getScrollY());
-		size.x = mCallout.getWidth() == 0 ? Views.dip2px(getContext(),
-				DEFAULT_CALLOUT_WIDTH) : mCallout.getWidth();
-		size.y = mCallout.getHeight() == 0 ? Views.dip2px(getContext(),
-				DEFAULT_CALLOUT_HEIGHT) : mCallout.getHeight();
-//		Log.d("mytag", "pos x, y = " + pos.x + ", " + pos.y + "; mapwidth = "
-//				+ getWidth());
-//		Log.d("mytag", "callout w, h = " + mCallout.getWidth() + ", "
-//				+ mCallout.getHeight());
-
+		size.x = callout.getWidth() == 0 ? Views.dip2px(getContext(),
+				DEFAULT_CALLOUT_WIDTH) : callout.getWidth();
+		size.y = callout.getHeight() == 0 ? Views.dip2px(getContext(),
+				DEFAULT_CALLOUT_HEIGHT) : callout.getHeight();
 		if (pos.x - size.x / 2 < 0) {
 			gravity |= Gravity.LEFT;
 			anchorX = -0.0f;
@@ -106,9 +126,9 @@ public class MapTileView extends TileView {
 			gravity |= Gravity.BOTTOM;
 			anchorY = -1.0f;
 		}
-		mCallout.setNubGravity(gravity);
-		return (BaseMapCallout) addCallout(mCallout, mCalloutX, mCalloutY,
-				anchorX, anchorY);
+		callout.setNubGravity(gravity);
+		addCallout(callout, x, y, anchorX, anchorY);
+		return callout.transitionIn();
 	}
 
 	public void frameTo(final double x, final double y) {
@@ -118,5 +138,13 @@ public class MapTileView extends TileView {
 				MapTileView.this.moveToAndCenter(x, y);
 			}
 		});
+	}
+
+	public void setOnNodeClickListener(onNodeClickListener listener) {
+		mNodeClickListener = listener;
+	}
+
+	public interface onNodeClickListener {
+		void onNodeClick(Object node, int x, int y);
 	}
 }

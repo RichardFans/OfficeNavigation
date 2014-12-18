@@ -2,7 +2,6 @@ package com.richard.officenavigation.callout;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.text.Html;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -12,14 +11,14 @@ import android.widget.TextView;
 
 import com.qozix.tileview.TileView;
 import com.richard.officenavigation.R;
-import com.richard.officenavigation.dao.INode;
+import com.richard.officenavigation.dao.Beacon;
 
-public class DelNodeCallout extends BaseMapCallout {
-	private TextView mTvNodeName, mTvNodePos;
-	private onConfirmNodeDelListener mListener;
-	private INode mNode;
+public class DelBeaconCallout extends BaseMapCallout {
+	private TextView mTvBeaconUuid, mTvBeaconPos, mTvBeaconMajorMinor;
+	private onConfirmBeaconDelListener mListener;
+	private Beacon mBeacon;
 
-	public DelNodeCallout(Context context, TileView mapView) {
+	public DelBeaconCallout(Context context, TileView mapView) {
 		super(context, mapView);
 		LinearLayout layout = new LinearLayout(context);
 		layout.setGravity(Gravity.CENTER_VERTICAL);
@@ -33,23 +32,29 @@ public class DelNodeCallout extends BaseMapCallout {
 		titleView.setTextColor(0xFFFFFFFF);
 		titleView.setTextSize(16);
 		titleView.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
-		titleView.setText(R.string.title_node_info);
+		titleView.setText(R.string.title_beacon_info);
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		params.setMargins(0, 0, 0, 8);
 		layout.addView(titleView, params);
 
-		mTvNodeName = new TextView(getContext());
-		mTvNodeName.setTextColor(0xFFFFFFFF);
-		mTvNodeName.setTextSize(12);
-		mTvNodeName.setText("名称：");
-		layout.addView(mTvNodeName);
+		mTvBeaconUuid = new TextView(getContext());
+		mTvBeaconUuid.setTextColor(0xFFFFFFFF);
+		mTvBeaconUuid.setTextSize(12);
+		mTvBeaconUuid.setText("UUID：");
+		layout.addView(mTvBeaconUuid);
 
-		mTvNodePos = new TextView(getContext());
-		mTvNodePos.setTextColor(0xFFFFFFFF);
-		mTvNodePos.setTextSize(12);
-		mTvNodeName.setText("位置：");
-		layout.addView(mTvNodePos, params);
+		mTvBeaconMajorMinor = new TextView(getContext());
+		mTvBeaconMajorMinor.setTextColor(0xFFFFFFFF);
+		mTvBeaconMajorMinor.setTextSize(12);
+		mTvBeaconMajorMinor.setText("主次编号：");
+		layout.addView(mTvBeaconMajorMinor, params);
+
+		mTvBeaconPos = new TextView(getContext());
+		mTvBeaconPos.setTextColor(0xFFFFFFFF);
+		mTvBeaconPos.setTextSize(12);
+		mTvBeaconUuid.setText("位置：");
+		layout.addView(mTvBeaconPos, params);
 
 		Button confirmBtn = new Button(getContext());
 		confirmBtn.setBackground(getContext().getResources().getDrawable(
@@ -67,19 +72,20 @@ public class DelNodeCallout extends BaseMapCallout {
 			@Override
 			public void onClick(View v) {
 				if (mListener != null) {
-					DelNodeCallout.this.mListener.onConfirmNodeDel(
-							DelNodeCallout.this, mNode);
+					DelBeaconCallout.this.mListener.onConfirmBeaconDel(
+							DelBeaconCallout.this, mBeacon);
 				}
 				dismiss();
 			}
 		});
 	}
 
-	public void setOnConfirmNodeDelListener(onConfirmNodeDelListener listener) {
+	public void setOnConfirmBeaconDelListener(
+			onConfirmBeaconDelListener listener) {
 		mListener = listener;
 	}
 
-	public static interface onConfirmNodeDelListener {
+	public static interface onConfirmBeaconDelListener {
 		/**
 		 * 
 		 * @param callout
@@ -91,15 +97,15 @@ public class DelNodeCallout extends BaseMapCallout {
 		 * @param y
 		 *            添加node的y坐标（相对值）
 		 */
-		public void onConfirmNodeDel(View callout, INode node);
+		public void onConfirmBeaconDel(View callout, Beacon beacon);
 	}
 
-	public void setNode(INode node) {
-		mNode = node;
-		String html = "名称：" + node.getName() + " <font color="
-				+ (node.getVisible() ? "'green'>" + "可见" : "'red'>" + "不可见")
-				+ "</font>";
-		mTvNodeName.setText(Html.fromHtml(html), TextView.BufferType.SPANNABLE);
-		mTvNodePos.setText("位置：" + node.getX() + ", " + node.getY());
+	public void setBeacon(Beacon beacon) {
+		mBeacon = beacon;
+		mTvBeaconUuid.setText("UUID：" + beacon.getUuid());
+		mTvBeaconPos.setText("位置：" + beacon.getX() + ", " + beacon.getY());
+		mTvBeaconMajorMinor.setText("主次编号："
+				+ Integer.toHexString(beacon.getMajor()) + ", "
+				+ Integer.toHexString(beacon.getMinor()));
 	}
 }

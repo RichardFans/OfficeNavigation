@@ -15,15 +15,11 @@ import com.richard.officenavigation.adapter.BottomTabAdapter;
 import com.richard.officenavigation.fragment.HomepageFragment;
 import com.richard.officenavigation.fragment.ManageFragment;
 import com.richard.officenavigation.fragment.MapFragment;
-import com.richard.officenavigation.fragment.SearchFragment;
+import com.richard.officenavigation.fragment.TabPagerFragment;
 
 import com.viewpagerindicator.CustomIconPosTabPageIndicator;
 
 public class MainActivity extends BaseActivity implements OnPageChangeListener {
-	private static final int HOME_PAGE_INDEX = 0;
-//	private static final int SEARCH_PAGE_INDEX = 1;
-//	private static final int MAP_PAGE_INDEX = 2;
-//	private static final int MANAGE_PAGE_INDEX = 3;
 
 	private static final String[] TITLES = new String[] { "首页", "寻找", "地图",
 			"管理" };
@@ -31,11 +27,12 @@ public class MainActivity extends BaseActivity implements OnPageChangeListener {
 			R.drawable.tab_bottom_homepage, R.drawable.tab_bottom_search,
 			R.drawable.tab_bottom_map, R.drawable.tab_bottom_manage, };
 	private static final Fragment[] FRAGMENTS = new Fragment[] {
-			new HomepageFragment(), new SearchFragment(), new MapFragment(),
+			new HomepageFragment(), new HomepageFragment(), new MapFragment(),
 			new ManageFragment(), };
 
 	private CustomIconPosTabPageIndicator mTabPageIndicator;
 	private ViewPager mVpMain;
+	private FragmentPagerAdapter mFPAdapter;
 
 	@Override
 	protected void findViews() {
@@ -46,11 +43,10 @@ public class MainActivity extends BaseActivity implements OnPageChangeListener {
 
 	@Override
 	protected void setupViews() {
-		FragmentPagerAdapter adapter = new BottomTabAdapter(
+		mFPAdapter = new BottomTabAdapter(
 				getSupportFragmentManager(), TITLES, ICONS, FRAGMENTS);
-
-		mVpMain.setAdapter(adapter);
-
+		mVpMain.setAdapter(mFPAdapter);
+		
 		mTabPageIndicator
 				.setTabIconLocation(CustomIconPosTabPageIndicator.LOCATION_UP);
 		mTabPageIndicator.setViewPager(mVpMain);
@@ -67,18 +63,33 @@ public class MainActivity extends BaseActivity implements OnPageChangeListener {
 		if (!appDir.exists()) {
 			appDir.mkdir();
 		}
-		File mapDir = new File(appDir.getAbsolutePath() + File.separator + C.map.DIR);
+		File mapDir = new File(appDir.getAbsolutePath() + File.separator
+				+ C.map.DIR);
 		if (!mapDir.exists()) {
 			mapDir.mkdir();
-		}	
+		}
 	}
 
+	private void setCurrentPage(int item) {
+		mTabPageIndicator.setCurrentItem(item);
+	}
+	
+	public void jump(int page, Bundle data) {
+		TabPagerFragment pager = (MapFragment) mFPAdapter.getItem(page);
+		switch (page) {
+		case C.main.MAP_PAGE_INDEX:
+			setCurrentPage(page);
+			pager.onJumpTo(data);
+			break;
+		}
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			if (mVpMain.getCurrentItem() != HOME_PAGE_INDEX) {
-				mTabPageIndicator.setCurrentItem(HOME_PAGE_INDEX);
+			if (mVpMain.getCurrentItem() != C.main.HOME_PAGE_INDEX) {
+				mTabPageIndicator.setCurrentItem(C.main.HOME_PAGE_INDEX);
 			}
 			break;
 		}
@@ -88,7 +99,7 @@ public class MainActivity extends BaseActivity implements OnPageChangeListener {
 	@Override
 	public void onPageSelected(int position) {
 		ActionBar actionBar = getActionBar();
-		if (position == HOME_PAGE_INDEX) {
+		if (position == C.main.HOME_PAGE_INDEX) {
 			actionBar.setDisplayHomeAsUpEnabled(false);
 		} else {
 			actionBar.setDisplayHomeAsUpEnabled(true);

@@ -12,7 +12,7 @@ import android.widget.CheckBox;
 import com.richard.officenavigation.R;
 import com.richard.officenavigation.Constants.C;
 
-public class ManageFragment extends BaseFragment implements OnClickListener {
+public class ManageFragment extends TabPagerFragment implements OnClickListener {
 
 	private CheckBox mCbBootStart, mCbVibration, mCbRecvMsg;
 	private SharedPreferences mSpManage;

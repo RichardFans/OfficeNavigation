@@ -23,16 +23,18 @@ import android.widget.ListAdapter;
 import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
 
+import com.richard.officenavigation.MainActivity;
 import com.richard.officenavigation.R;
+import com.richard.officenavigation.Constants.C;
 
-public class HomepageFragment extends BaseFragment implements
+public class HomepageFragment extends TabPagerFragment implements
 		OnItemClickListener, OnClickListener {
 	private static final int[] PICS = { R.drawable.pic_miss_liu,
 			R.drawable.pic_miss_li, R.drawable.pic_mr_fan,
 			R.drawable.pic_mr_luo, R.drawable.pic_mr_yang,
 			R.drawable.pic_mr_ma, R.drawable.pic_mr_zhang,
 			R.drawable.pic_mr_li, };
-	private static final String[] NAMES = { "刘芳老师", "李瑶老师", "范展源老师", "罗富强老师",
+	private static final String[] NAMES = { "刘芳老师", "李瑶老师", "范展源老师", "罗福强老师",
 			"杨峰老师", "马磊老师", "张志亮老师", "李恒毅老师", };
 	private static final String PIC_KEY = "pic";
 	private static final String NAME_KEY = "name";
@@ -71,8 +73,8 @@ public class HomepageFragment extends BaseFragment implements
 		// 选择操作对话框
 		mDlgSelectMethod = new Dialog(getActivity());
 		mDlgSelectMethod.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View v = inflater.inflate(R.layout.dialog_select_method, null);
+		View v = View.inflate(getActivity(), R.layout.dialog_select_method,
+				null);
 		mDlgSelectMethod.setContentView(v);
 		mRgDsmSelectMethod = (RadioGroup) v.findViewById(R.id.rg_select_method);
 		mBtnDsmCancel = (Button) v.findViewById(R.id.btn_cancel);
@@ -83,7 +85,7 @@ public class HomepageFragment extends BaseFragment implements
 		// 考勤对话框
 		mDlgCheckInOrOut = new Dialog(getActivity());
 		mDlgCheckInOrOut.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		v = inflater.inflate(R.layout.dialog_check_in_or_out, null);
+		v = View.inflate(getActivity(), R.layout.dialog_check_in_or_out, null);
 		mDlgCheckInOrOut.setContentView(v);
 		mRgCioSelectMethod = (RadioGroup) v
 				.findViewById(R.id.rg_select_in_or_out);
@@ -127,7 +129,7 @@ public class HomepageFragment extends BaseFragment implements
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		d("你点击了" + NAMES[position]);
-		mBtnDsmConfirm.setTag(NAMES[position]);
+		mBtnDsmConfirm.setTag(NAMES[position] + "办公桌");
 		mDlgSelectMethod.show();
 	}
 
@@ -137,7 +139,7 @@ public class HomepageFragment extends BaseFragment implements
 			mDlgSelectMethod.dismiss();
 			String name = (String) mBtnDsmConfirm.getTag();
 			if (mRgDsmSelectMethod.getCheckedRadioButtonId() == R.id.rb_find_desk) {
-				m("寻找" + name + "办公桌");
+				handleFindDesk(name);
 			} else {
 				m("给" + name + "留言");
 			}
@@ -153,5 +155,18 @@ public class HomepageFragment extends BaseFragment implements
 		} else if (v == mBtnCioCancel) {
 			mDlgCheckInOrOut.dismiss();
 		}
+	}
+
+	private void handleFindDesk(String name) {
+		Bundle data = new Bundle();
+		data.putInt(C.map.KEY_ACTION, C.map.ACTION_NAVIGATION);
+		data.putString(C.map.KEY_NAVI_ARG_NAME, name);
+		jumpToPage(C.main.MAP_PAGE_INDEX, data);
+	}
+
+	@Override
+	public void jumpToPage(int page, Bundle data) {
+		MainActivity main = (MainActivity) getActivity();
+		main.jump(page, data);
 	}
 }

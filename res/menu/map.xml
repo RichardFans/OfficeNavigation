@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_set_beacon"
-        android:icon="@drawable/action_set_beacon"
+        android:icon="@drawable/action_manage_beacon"
         android:showAsAction="always"
         android:title="@string/action_set_beacon"/>
     <item

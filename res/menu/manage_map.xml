@@ -3,7 +3,7 @@
     tools:context="com.richard.officenavigation.CreateMapActivity" >
 
     <item
-        android:id="@+id/menu_mangage_map"
+        android:id="@+id/menu_manage_map"
         android:icon="@drawable/action_manage_map"
         android:showAsAction="always|withText"
         android:title="@string/action_manage_map">
