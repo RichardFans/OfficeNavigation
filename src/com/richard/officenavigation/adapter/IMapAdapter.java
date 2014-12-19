@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.richard.officenavigation.R;
 import com.richard.officenavigation.Constants.C;
+import com.richard.officenavigation.dao.IBeacon;
 import com.richard.officenavigation.dao.IMap;
 import com.richard.officenavigation.dao.IMapDao;
 import com.richard.officenavigation.dao.INode;
@@ -65,6 +66,10 @@ public class IMapAdapter implements BaseMapAdapter {
 
 	public List<INode> getINodes() {
 		return mMap.getNodes();
+	}
+	
+	public List<IBeacon> getIBeacons() {
+		return mMap.getBeacons();
 	}
 
 	@Override

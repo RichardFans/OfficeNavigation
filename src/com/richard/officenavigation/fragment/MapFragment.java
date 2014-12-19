@@ -2,7 +2,11 @@ package com.richard.officenavigation.fragment;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.Region;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,6 +20,7 @@ import android.graphics.Paint.Style;
 import android.graphics.PathEffect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,12 +33,15 @@ import com.qozix.tileview.paths.DrawablePath;
 import com.richard.officenavigation.CreateMapActivity;
 import com.richard.officenavigation.ManageBeaconActivity;
 import com.richard.officenavigation.ManageMapActivity;
+import com.richard.officenavigation.OfficeNaviApplication;
+import com.richard.officenavigation.OfficeNaviApplication.onRangeBeaconsInRegionListener;
 import com.richard.officenavigation.R;
 import com.richard.officenavigation.Constants.C;
 import com.richard.officenavigation.adapter.BaseMapAdapter;
 import com.richard.officenavigation.adapter.IMapAdapter;
 import com.richard.officenavigation.callout.FindPathCallout;
 import com.richard.officenavigation.callout.FindPathCallout.onConfirmPathListener;
+import com.richard.officenavigation.dao.IBeacon;
 import com.richard.officenavigation.dao.INode;
 import com.richard.officenavigation.dialog.DirectoryChooserDialog;
 import com.richard.officenavigation.dialog.DirectoryChooserDialog.OnConfirmDirectoryChooseListener;
@@ -42,13 +50,15 @@ import com.richard.officenavigation.dialog.MapChooserDialog.onMapSelectedListene
 import com.richard.officenavigation.dialog.MapParamsSetterDialog;
 import com.richard.officenavigation.dialog.MapParamsSetterDialog.onConfirmSettingListener;
 import com.richard.officenavigation.findpath.Dijkstra;
+import com.richard.officenavigation.view.CircleManager.DrawableCircle;
 import com.richard.officenavigation.view.DespoticTileView;
 import com.richard.officenavigation.view.MapTileView.onNodeClickListener;
 import com.richard.utils.Views;
 
 public class MapFragment extends TabPagerFragment implements
 		OnConfirmDirectoryChooseListener, onConfirmSettingListener,
-		onMapSelectedListener, onNodeClickListener, onConfirmPathListener {
+		onMapSelectedListener, onNodeClickListener, onConfirmPathListener,
+		onRangeBeaconsInRegionListener {
 	private static final int REQ_CREATE_MAP = 1;
 	private static final int REQ_MANAGE_MAP = 2;
 	private DespoticTileView mTileMap;
@@ -62,6 +72,9 @@ public class MapFragment extends TabPagerFragment implements
 	private Dijkstra mAlgorithmFindPath;
 	private DrawablePath mDrawPath, mDrawPathArrow;
 	private Paint mPaintPath, mPaintArrow;
+
+	private SparseArray<IBeacon> mMapBeacon;
+	private SparseArray<DrawableCircle> mMapBeaconCircle;
 
 	private Bundle mExtraData;
 
@@ -82,10 +95,17 @@ public class MapFragment extends TabPagerFragment implements
 		SharedPreferences sp = getActivity().getSharedPreferences(
 				C.PREFERENCES_MANAGE, Context.MODE_PRIVATE);
 		Long mapId = sp.getLong(C.map.KEY_CURRENT_MAPID, C.map.DEFAULT_MAP_ID);
-		BaseMapAdapter adapter = new IMapAdapter(getActivity(), mapId);
+		IMapAdapter adapter = new IMapAdapter(getActivity(), mapId);
 		mTileMap.setAdapter(adapter);
 		mTileMap.setupMapDefault(true);
 		mTileMap.setOnNodeClickListener(this);
+
+		mMapBeacon = new SparseArray<>();
+		List<IBeacon> beacons = adapter.getIBeacons();
+		for (IBeacon beacon : beacons) {
+			mMapBeacon.put(beacon.getMinor(), beacon);
+		}
+		mMapBeaconCircle = new SparseArray<>();
 
 		mIvFrom = new ImageView(getActivity());
 		mIvFrom.setImageResource(R.drawable.find_path_start);
@@ -166,8 +186,40 @@ public class MapFragment extends TabPagerFragment implements
 	}
 
 	@Override
+	public void onRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+		if (beacons.size() > 0) {
+			for (Beacon beacon : beacons) {
+				d("Beacon " + beacon.toString() + " is about "
+						+ beacon.getDistance() + " meters away, with Rssi: "
+						+ beacon.getRssi());
+				updateBeaconCircle(beacon);
+			}
+		}
+	}
+
+	private void updateBeaconCircle(final Beacon beacon) {
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				double scale = mTileMap.getAdapter().getScale();
+				IBeacon ibeacon = mMapBeacon.get(beacon.getId3().toInt());
+				if (ibeacon != null) {
+					DrawableCircle circle = mMapBeaconCircle.get(ibeacon
+							.getMinor());
+					mTileMap.removeCircle(circle);
+					circle = mTileMap.drawCircle(ibeacon.getX() / scale,
+							ibeacon.getY() / scale, beacon.getDistance() * 1000
+									/ scale);
+					mMapBeaconCircle.put(ibeacon.getMinor(), circle);
+				}
+			}
+		});
+	}
+
+	@Override
 	public void onPause() {
 		super.onPause();
+		((OfficeNaviApplication) this.getActivity().getApplication())
+				.setOnRangeBeaconsInRegionListener(null);
 		mTileMap.clear();
 	}
 
@@ -175,6 +227,8 @@ public class MapFragment extends TabPagerFragment implements
 	public void onResume() {
 		super.onResume();
 		mTileMap.resume();
+		((OfficeNaviApplication) this.getActivity().getApplication())
+				.setOnRangeBeaconsInRegionListener(this);
 	}
 
 	@Override

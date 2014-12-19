@@ -8,6 +8,7 @@
 	<classpathentry kind="lib" path="libs/disklrucache-1.3.1.jar"/>
 	<classpathentry kind="lib" path="libs/greendao-1.3.7.jar" sourcepath="D:/Program Files/adt-bundle-windows-x86_64-20140702/workspaces/project_jc/resources/greenDAO-master/DaoCore/src"/>
 	<classpathentry kind="lib" path="libs/tileviewlib.jar" sourcepath="D:/Program Files/adt-bundle-windows-x86_64-20140702/workspaces/project_jc/resources/TileView-master/src"/>
+	<classpathentry kind="lib" path="libs/android-beacon-library.jar" sourcepath="D:/Program Files/adt-bundle-windows-x86_64-20140702/workspaces/project_jc/resources/android-beacon-library-master/src/main/java"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

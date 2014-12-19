@@ -5,14 +5,14 @@ package com.richard.officenavigation.dao;
 // KEEP INCLUDES - put your custom includes here
 // KEEP INCLUDES END
 /**
- * Entity mapped to table BEACON.
+ * Entity mapped to table IBEACON.
  */
-public class Beacon {
+public class IBeacon {
 
     private Long id;
     private long x;
     private long y;
-    private long mapid;
+    private long mapId;
     /** Not-null value. */
     private String uuid;
     private int major;
@@ -21,18 +21,18 @@ public class Beacon {
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
 
-    public Beacon() {
+    public IBeacon() {
     }
 
-    public Beacon(Long id) {
+    public IBeacon(Long id) {
         this.id = id;
     }
 
-    public Beacon(Long id, long x, long y, long mapid, String uuid, int major, int minor) {
+    public IBeacon(Long id, long x, long y, long mapId, String uuid, int major, int minor) {
         this.id = id;
         this.x = x;
         this.y = y;
-        this.mapid = mapid;
+        this.mapId = mapId;
         this.uuid = uuid;
         this.major = major;
         this.minor = minor;
@@ -62,12 +62,12 @@ public class Beacon {
         this.y = y;
     }
 
-    public long getMapid() {
-        return mapid;
+    public long getMapId() {
+        return mapId;
     }
 
-    public void setMapid(long mapid) {
-        this.mapid = mapid;
+    public void setMapId(long mapId) {
+        this.mapId = mapId;
     }
 
     /** Not-null value. */

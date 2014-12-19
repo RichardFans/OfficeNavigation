@@ -13,169 +13,150 @@ import de.greenrobot.dao.DaoException;
  */
 public class INode implements Comparable<INode> {
 
-	private Long id;
-	private long x;
-	private long y;
-	/** Not-null value. */
-	private String name;
-	private boolean visible;
-	private long mapId;
+    private Long id;
+    private long x;
+    private long y;
+    /** Not-null value. */
+    private String name;
+    private boolean visible;
+    private long mapId;
 
-	/** Used to resolve relations */
-	private transient DaoSession daoSession;
+    /** Used to resolve relations */
+    private transient DaoSession daoSession;
 
-	/** Used for active entity operations. */
-	private transient INodeDao myDao;
+    /** Used for active entity operations. */
+    private transient INodeDao myDao;
 
-	private List<IPath> adjacencies;
+    private List<IPath> adjacencies;
 
-	// KEEP FIELDS - put your custom fields here
+    // KEEP FIELDS - put your custom fields here
 	public double minDistance;
 	public INode previous;
-	// KEEP FIELDS END
+    // KEEP FIELDS END
 
-	public INode() {
-	}
+    public INode() {
+    }
 
-	public INode(Long id) {
-		this.id = id;
-	}
+    public INode(Long id) {
+        this.id = id;
+    }
 
-	public INode(Long id, long x, long y, String name, boolean visible,
-			long mapId) {
-		this.id = id;
-		this.x = x;
-		this.y = y;
-		this.name = name;
-		this.visible = visible;
-		this.mapId = mapId;
-	}
+    public INode(Long id, long x, long y, String name, boolean visible, long mapId) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.name = name;
+        this.visible = visible;
+        this.mapId = mapId;
+    }
 
-	/** called by internal mechanisms, do not call yourself. */
-	public void __setDaoSession(DaoSession daoSession) {
-		this.daoSession = daoSession;
-		myDao = daoSession != null ? daoSession.getINodeDao() : null;
-	}
+    /** called by internal mechanisms, do not call yourself. */
+    public void __setDaoSession(DaoSession daoSession) {
+        this.daoSession = daoSession;
+        myDao = daoSession != null ? daoSession.getINodeDao() : null;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public long getX() {
-		return x;
-	}
+    public long getX() {
+        return x;
+    }
 
-	public void setX(long x) {
-		this.x = x;
-	}
+    public void setX(long x) {
+        this.x = x;
+    }
 
-	public long getY() {
-		return y;
-	}
+    public long getY() {
+        return y;
+    }
 
-	public void setY(long y) {
-		this.y = y;
-	}
+    public void setY(long y) {
+        this.y = y;
+    }
 
-	/** Not-null value. */
-	public String getName() {
-		return name;
-	}
+    /** Not-null value. */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * Not-null value; ensure this value is available before it is saved to the
-	 * database.
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public boolean getVisible() {
-		return visible;
-	}
+    public boolean getVisible() {
+        return visible;
+    }
 
-	public void setVisible(boolean visible) {
-		this.visible = visible;
-	}
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
 
-	public long getMapId() {
-		return mapId;
-	}
+    public long getMapId() {
+        return mapId;
+    }
 
-	public void setMapId(long mapId) {
-		this.mapId = mapId;
-	}
+    public void setMapId(long mapId) {
+        this.mapId = mapId;
+    }
 
-	/**
-	 * To-many relationship, resolved on first access (and after reset). Changes
-	 * to to-many relations are not persisted, make changes to the target
-	 * entity.
-	 */
-	public List<IPath> getAdjacencies() {
-		if (adjacencies == null) {
-			if (daoSession == null) {
-				throw new DaoException("Entity is detached from DAO context");
-			}
-			IPathDao targetDao = daoSession.getIPathDao();
-			List<IPath> adjacenciesNew = targetDao._queryINode_Adjacencies(id);
-			synchronized (this) {
-				if (adjacencies == null) {
-					adjacencies = adjacenciesNew;
-				}
-			}
-		}
-		return adjacencies;
-	}
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<IPath> getAdjacencies() {
+        if (adjacencies == null) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            IPathDao targetDao = daoSession.getIPathDao();
+            List<IPath> adjacenciesNew = targetDao._queryINode_Adjacencies(id);
+            synchronized (this) {
+                if(adjacencies == null) {
+                    adjacencies = adjacenciesNew;
+                }
+            }
+        }
+        return adjacencies;
+    }
 
-	/**
-	 * Resets a to-many relationship, making the next get call to query for a
-	 * fresh result.
-	 */
-	public synchronized void resetAdjacencies() {
-		adjacencies = null;
-	}
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetAdjacencies() {
+        adjacencies = null;
+    }
 
-	/**
-	 * Convenient call for {@link AbstractDao#delete(Object)}. Entity must
-	 * attached to an entity context.
-	 */
-	public void delete() {
-		if (myDao == null) {
-			throw new DaoException("Entity is detached from DAO context");
-		}
-		myDao.delete(this);
-	}
+    /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */
+    public void delete() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }    
+        myDao.delete(this);
+    }
 
-	/**
-	 * Convenient call for {@link AbstractDao#update(Object)}. Entity must
-	 * attached to an entity context.
-	 */
-	public void update() {
-		if (myDao == null) {
-			throw new DaoException("Entity is detached from DAO context");
-		}
-		myDao.update(this);
-	}
+    /** Convenient call for {@link AbstractDao#update(Object)}. Entity must attached to an entity context. */
+    public void update() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }    
+        myDao.update(this);
+    }
 
-	/**
-	 * Convenient call for {@link AbstractDao#refresh(Object)}. Entity must
-	 * attached to an entity context.
-	 */
-	public void refresh() {
-		if (myDao == null) {
-			throw new DaoException("Entity is detached from DAO context");
-		}
-		myDao.refresh(this);
-	}
+    /** Convenient call for {@link AbstractDao#refresh(Object)}. Entity must attached to an entity context. */
+    public void refresh() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }    
+        myDao.refresh(this);
+    }
 
-	// KEEP METHODS - put your custom methods here
+    // KEEP METHODS - put your custom methods here
 	@Override
 	public int compareTo(INode another) {
 		return Double.compare(minDistance, another.minDistance);
 	}
-	// KEEP METHODS END
+    // KEEP METHODS END
+
 }

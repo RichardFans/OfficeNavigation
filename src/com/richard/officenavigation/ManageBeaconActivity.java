@@ -18,8 +18,8 @@ import com.richard.officenavigation.callout.AddBeaconCallout;
 import com.richard.officenavigation.callout.AddBeaconCallout.onConfirmBeaconAddListener;
 import com.richard.officenavigation.callout.DelBeaconCallout;
 import com.richard.officenavigation.callout.DelBeaconCallout.onConfirmBeaconDelListener;
-import com.richard.officenavigation.dao.Beacon;
-import com.richard.officenavigation.dao.BeaconDao;
+import com.richard.officenavigation.dao.IBeacon;
+import com.richard.officenavigation.dao.IBeaconDao;
 import com.richard.officenavigation.dao.DaoSession;
 import com.richard.officenavigation.dao.IMap;
 import com.richard.officenavigation.dao.SingletonDaoSession;
@@ -59,14 +59,16 @@ public class ManageBeaconActivity extends BaseActivity implements
 	protected void initDatas(Bundle savedInstanceState) {
 		mDaoSession = SingletonDaoSession.getInstance(this);
 		mMap = ((IMapAdapter) mTileMap.getAdapter()).getIMap();
-		List<Beacon> beacons = mMap.getBeacons();
+		List<IBeacon> beacons = mMap.getBeacons();
 		if (!beacons.isEmpty()) {
-			for (Beacon beacon : beacons) {
+			for (IBeacon beacon : beacons) {
 				ImageView marker = new ImageView(this);
 				marker.setImageResource(R.drawable.map_beacon_icon);
 				marker.setTag(beacon);
 				mTileMap.addMarker(marker, beacon.getX() / mMap.getScale(),
 						beacon.getY() / mMap.getScale(), -0.5f, -0.5f);
+				mTileMap.drawCircle(beacon.getX() / mMap.getScale(),
+						beacon.getY() / mMap.getScale(), 1000 / mMap.getScale());
 			}
 		}
 		mTileMap.addMarkerEventListener(mDelBeaconMarkerListener);
@@ -171,30 +173,30 @@ public class ManageBeaconActivity extends BaseActivity implements
 			return;
 		}
 		// 保存节点到数据库
-		BeaconDao beaconDao = mDaoSession.getBeaconDao();
-		Beacon beacon = new Beacon();
+		IBeaconDao beaconDao = mDaoSession.getIBeaconDao();
+		IBeacon beacon = new IBeacon();
 		beacon.setUuid(uuid);
 		beacon.setMajor(major);
 		beacon.setMinor(minor);
 		beacon.setX((long) (x * mMap.getScale()));
 		beacon.setY((long) (y * mMap.getScale()));
-		beacon.setMapid(mMap.getId());
-		List<Beacon> beacons = beaconDao
+		beacon.setMapId(mMap.getId());
+		List<IBeacon> beacons = beaconDao
 				.queryBuilder()
 				.whereOr(
 						beaconDao.queryBuilder().and(
-								BeaconDao.Properties.Mapid.eq(mMap.getId()),
-								BeaconDao.Properties.X.eq(beacon.getX()),
-								BeaconDao.Properties.Y.eq(beacon.getY())),
+								IBeaconDao.Properties.MapId.eq(mMap.getId()),
+								IBeaconDao.Properties.X.eq(beacon.getX()),
+								IBeaconDao.Properties.Y.eq(beacon.getY())),
 						beaconDao
 								.queryBuilder()
-								.and(BeaconDao.Properties.Mapid
+								.and(IBeaconDao.Properties.MapId
 										.eq(mMap.getId()),
-										BeaconDao.Properties.Uuid.eq(beacon
+										IBeaconDao.Properties.Uuid.eq(beacon
 												.getUuid()),
-										BeaconDao.Properties.Major.eq(beacon
+										IBeaconDao.Properties.Major.eq(beacon
 												.getMajor()),
-										BeaconDao.Properties.Minor.eq(beacon
+										IBeaconDao.Properties.Minor.eq(beacon
 												.getMinor()))).list();
 		if (!beacons.isEmpty()) {
 			m("该信标已存在！");
@@ -212,12 +214,12 @@ public class ManageBeaconActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onConfirmBeaconDel(View callout, Beacon beacon) {
+	public void onConfirmBeaconDel(View callout, IBeacon beacon) {
 		// 删除所画节点
 		mTileMap.removeMarker((View) callout.getTag());
 
 		// 删除数据库中的节点
-		BeaconDao beaconDao = mDaoSession.getBeaconDao();
+		IBeaconDao beaconDao = mDaoSession.getIBeaconDao();
 		beaconDao.delete(beacon);
 	}
 
@@ -226,7 +228,7 @@ public class ManageBeaconActivity extends BaseActivity implements
 		@Override
 		public void onMarkerTap(View view, int x, int y) {
 			double scale = mTileMap.getScale();
-			mCalloutDelBeacon.setBeacon((Beacon) view.getTag());
+			mCalloutDelBeacon.setBeacon((IBeacon) view.getTag());
 			mCalloutDelBeacon.setTag(view);
 			mTileMap.addCallout(mCalloutDelBeacon, x / scale, y / scale);
 		}

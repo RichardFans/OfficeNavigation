@@ -11,12 +11,12 @@ import android.widget.TextView;
 
 import com.qozix.tileview.TileView;
 import com.richard.officenavigation.R;
-import com.richard.officenavigation.dao.Beacon;
+import com.richard.officenavigation.dao.IBeacon;
 
 public class DelBeaconCallout extends BaseMapCallout {
 	private TextView mTvBeaconUuid, mTvBeaconPos, mTvBeaconMajorMinor;
 	private onConfirmBeaconDelListener mListener;
-	private Beacon mBeacon;
+	private IBeacon mBeacon;
 
 	public DelBeaconCallout(Context context, TileView mapView) {
 		super(context, mapView);
@@ -97,10 +97,10 @@ public class DelBeaconCallout extends BaseMapCallout {
 		 * @param y
 		 *            添加node的y坐标（相对值）
 		 */
-		public void onConfirmBeaconDel(View callout, Beacon beacon);
+		public void onConfirmBeaconDel(View callout, IBeacon beacon);
 	}
 
-	public void setBeacon(Beacon beacon) {
+	public void setBeacon(IBeacon beacon) {
 		mBeacon = beacon;
 		mTvBeaconUuid.setText("UUID：" + beacon.getUuid());
 		mTvBeaconPos.setText("位置：" + beacon.getX() + ", " + beacon.getY());

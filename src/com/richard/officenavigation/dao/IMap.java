@@ -29,7 +29,7 @@ public class IMap {
     private transient IMapDao myDao;
 
     private List<INode> nodes;
-    private List<Beacon> beacons;
+    private List<IBeacon> beacons;
 
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
@@ -131,13 +131,13 @@ public class IMap {
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
-    public List<Beacon> getBeacons() {
+    public List<IBeacon> getBeacons() {
         if (beacons == null) {
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");
             }
-            BeaconDao targetDao = daoSession.getBeaconDao();
-            List<Beacon> beaconsNew = targetDao._queryIMap_Beacons(id);
+            IBeaconDao targetDao = daoSession.getIBeaconDao();
+            List<IBeacon> beaconsNew = targetDao._queryIMap_Beacons(id);
             synchronized (this) {
                 if(beacons == null) {
                     beacons = beaconsNew;
