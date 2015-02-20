@@ -12,6 +12,7 @@ import org.altbeacon.beacon.startup.BootstrapNotifier;
 import org.altbeacon.beacon.startup.RegionBootstrap;
 
 import android.app.Application;
+import android.bluetooth.BluetoothAdapter;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -68,8 +69,9 @@ public class OfficeNaviApplication extends Application implements
 			mListener.onRangeBeaconsInRegion(beacons, region);
 		}
 	}
-	
-	public void setOnRangeBeaconsInRegionListener(onRangeBeaconsInRegionListener listener) {
+
+	public void setOnRangeBeaconsInRegionListener(
+			onRangeBeaconsInRegionListener listener) {
 		mListener = listener;
 	}
 

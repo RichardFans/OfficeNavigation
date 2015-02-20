@@ -15,10 +15,10 @@ import android.view.View;
 import com.qozix.tileview.TileView;
 import com.qozix.tileview.detail.DetailManager;
 import com.qozix.tileview.graphics.BitmapDecoder;
-import com.qozix.tileview.graphics.BitmapDecoderFile;
 import com.qozix.tileview.markers.MarkerEventListener;
 import com.richard.officenavigation.adapter.BaseMapAdapter;
 import com.richard.officenavigation.callout.BaseMapCallout;
+import com.richard.officenavigation.graphics.BitmapDecoderFile;
 import com.richard.officenavigation.view.CircleManager.DrawableCircle;
 import com.richard.utils.Views;
 

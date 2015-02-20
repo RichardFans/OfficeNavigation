@@ -3,19 +3,40 @@
     tools:context="com.richard.officenavigation.MainActivity" >
 
     <item
-        android:id="@+id/action_set_beacon"
+        android:id="@+id/action_manage_beacon"
         android:icon="@drawable/action_manage_beacon"
         android:showAsAction="always"
-        android:title="@string/action_set_beacon"/>
+        android:title="@string/action_manage_beacon">
+        <menu>
+            <item
+                android:id="@+id/action_set_beacon"
+                android:icon="@drawable/action_manage_beacon"
+                android:showAsAction="always"
+                android:title="@string/action_manage_beacon"/>
+            <item
+                android:id="@+id/action_locate_training"
+                android:icon="@drawable/action_locate_training"
+                android:showAsAction="always"
+                android:title="@string/action_locate_training"/>
+        </menu>
+    </item>
     <item
-        android:id="@+id/action_add_map"
-        android:icon="@drawable/action_add_map"
-        android:showAsAction="always"
-        android:title="@string/action_add_map"/>
-    <item
-        android:id="@+id/action_set_map"
+        android:id="@+id/action_manage_map"
         android:icon="@drawable/action_manage_map"
         android:showAsAction="always"
-        android:title="@string/action_manage_map"/>
+        android:title="@string/action_manage_map">
+        <menu>
+            <item
+                android:id="@+id/action_add_map"
+                android:icon="@drawable/action_add_map"
+                android:showAsAction="always"
+                android:title="@string/action_add_map"/>
+            <item
+                android:id="@+id/action_set_map"
+                android:icon="@drawable/action_manage_map"
+                android:showAsAction="always"
+                android:title="@string/action_manage_map"/>
+        </menu>
+    </item>
 
 </menu>

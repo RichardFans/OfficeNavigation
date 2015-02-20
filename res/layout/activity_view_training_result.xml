@@ -1,0 +1,82 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/container1_cb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/manage_title_bg"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/cb_raw"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:button="@drawable/dropdown_checkbox"
+            android:checked="true"
+            android:tag="0"
+            android:text="@string/raw_datas"
+            android:textSize="12sp" />
+
+        <CheckBox
+            android:id="@+id/cb_kalman"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:button="@drawable/dropdown_checkbox"
+            android:tag="1"
+            android:text="@string/kalman_datas"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/container2_cb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/manage_title_bg"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/cb_wavelet"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_weight="1"
+            android:button="@drawable/dropdown_checkbox"
+            android:tag="2"
+            android:text="@string/wavelet_datas"
+            android:textSize="12sp" />
+
+        <CheckBox
+            android:id="@+id/cb_gauss"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_weight="1"
+            android:button="@drawable/dropdown_checkbox"
+            android:tag="3"
+            android:text="@string/gaussian_datas"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#95827a" />
+
+    <ExpandableListView
+        android:id="@+id/elv_results"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="#00000000"
+        android:listSelector="#00000000"
+        android:padding="12dp" />
+
+</LinearLayout>

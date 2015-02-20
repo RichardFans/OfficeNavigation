@@ -2,7 +2,11 @@ package com.richard.officenavigation;
 
 import java.io.File;
 
+import org.altbeacon.beacon.BeaconManager;
+
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,13 +14,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.MenuItem;
 
-import com.richard.officenavigation.Constants.C;
 import com.richard.officenavigation.adapter.BottomTabAdapter;
+import com.richard.officenavigation.constants.C;
 import com.richard.officenavigation.fragment.HomepageFragment;
 import com.richard.officenavigation.fragment.ManageFragment;
 import com.richard.officenavigation.fragment.MapFragment;
 import com.richard.officenavigation.fragment.TabPagerFragment;
-
 import com.viewpagerindicator.CustomIconPosTabPageIndicator;
 
 public class MainActivity extends BaseActivity implements OnPageChangeListener {
@@ -33,20 +36,21 @@ public class MainActivity extends BaseActivity implements OnPageChangeListener {
 	private CustomIconPosTabPageIndicator mTabPageIndicator;
 	private ViewPager mVpMain;
 	private FragmentPagerAdapter mFPAdapter;
-
+	
 	@Override
 	protected void findViews() {
 		setContentView(R.layout.activity_main);
+		verifyBluetooth();
 		mVpMain = (ViewPager) findViewById(R.id.pager);
 		mTabPageIndicator = (CustomIconPosTabPageIndicator) findViewById(R.id.indicator);
 	}
 
 	@Override
 	protected void setupViews() {
-		mFPAdapter = new BottomTabAdapter(
-				getSupportFragmentManager(), TITLES, ICONS, FRAGMENTS);
+		mFPAdapter = new BottomTabAdapter(getSupportFragmentManager(), TITLES,
+				ICONS, FRAGMENTS);
 		mVpMain.setAdapter(mFPAdapter);
-		
+
 		mTabPageIndicator
 				.setTabIconLocation(CustomIconPosTabPageIndicator.LOCATION_UP);
 		mTabPageIndicator.setViewPager(mVpMain);
@@ -56,6 +60,42 @@ public class MainActivity extends BaseActivity implements OnPageChangeListener {
 	@Override
 	protected void initDatas(Bundle savedInstanceState) {
 		ensureAppDirExists();
+	}
+
+	private void verifyBluetooth() {
+		try {
+			if (!BeaconManager.getInstanceForApplication(this)
+					.checkAvailability()) {
+				final AlertDialog.Builder builder = new AlertDialog.Builder(
+						this);
+				builder.setTitle(R.string.title_bluetooth_not_enable);
+				builder.setMessage(R.string.msg_bluetooth_should_enable);
+				builder.setPositiveButton(R.string.confirm, null);
+				builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						finish();
+						System.exit(0);
+					}
+				});
+				builder.show();
+			}
+		} catch (RuntimeException e) {
+			final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("Bluetooth LE not available");
+			builder.setMessage("Sorry, this device does not support Bluetooth LE.");
+			builder.setPositiveButton(R.string.confirm, null);
+			builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					finish();
+					System.exit(0);
+				}
+
+			});
+			builder.show();
+		}
 	}
 
 	private void ensureAppDirExists() {
@@ -73,7 +113,7 @@ public class MainActivity extends BaseActivity implements OnPageChangeListener {
 	private void setCurrentPage(int item) {
 		mTabPageIndicator.setCurrentItem(item);
 	}
-	
+
 	public void jump(int page, Bundle data) {
 		TabPagerFragment pager = (MapFragment) mFPAdapter.getItem(page);
 		switch (page) {
@@ -83,7 +123,7 @@ public class MainActivity extends BaseActivity implements OnPageChangeListener {
 			break;
 		}
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {

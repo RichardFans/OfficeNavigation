@@ -45,7 +45,7 @@ public class IMapDao extends AbstractDao<IMap, Long> {
 
     /** Creates the underlying database table. */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
-        String constraint = ifNotExists? "IF NOT EXISTS ": "";
+        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "'IMAP' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'SRC' TEXT NOT NULL ," + // 1: src

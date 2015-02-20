@@ -3,7 +3,7 @@ package com.richard.officenavigation.dao;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.richard.officenavigation.Constants.C;
+import com.richard.officenavigation.constants.C;
 import com.richard.officenavigation.dao.DaoMaster.DevOpenHelper;
 
 public class SingletonDaoSession {

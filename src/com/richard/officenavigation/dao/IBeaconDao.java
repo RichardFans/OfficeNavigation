@@ -47,7 +47,7 @@ public class IBeaconDao extends AbstractDao<IBeacon, Long> {
 
     /** Creates the underlying database table. */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
-        String constraint = ifNotExists? "IF NOT EXISTS ": "";
+        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "'IBEACON' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'X' INTEGER NOT NULL ," + // 1: x

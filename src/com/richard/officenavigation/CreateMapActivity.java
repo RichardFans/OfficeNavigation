@@ -22,7 +22,6 @@ import android.widget.ImageView;
 
 import com.qozix.tileview.markers.MarkerEventListener;
 import com.qozix.tileview.paths.DrawablePath;
-import com.richard.officenavigation.Constants.C;
 import com.richard.officenavigation.adapter.IMapAdapter;
 import com.richard.officenavigation.callout.AddNodeCallout;
 import com.richard.officenavigation.callout.AddNodeCallout.onConfirmNodeAddListener;
@@ -32,6 +31,7 @@ import com.richard.officenavigation.callout.DelNodeCallout;
 import com.richard.officenavigation.callout.DelNodeCallout.onConfirmNodeDelListener;
 import com.richard.officenavigation.callout.DelPathCallout;
 import com.richard.officenavigation.callout.DelPathCallout.onConfirmPathDelListener;
+import com.richard.officenavigation.constants.C;
 import com.richard.officenavigation.dao.DaoSession;
 import com.richard.officenavigation.dao.IMap;
 import com.richard.officenavigation.dao.IMapDao;

@@ -1,6 +1,6 @@
 package com.richard.officenavigation;
 
-import com.richard.officenavigation.Constants.C;
+import com.richard.officenavigation.constants.C;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;

@@ -5,11 +5,13 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.PointF;
+import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.View;
 import android.widget.TextView;
 
 import com.richard.officenavigation.R;
-import com.richard.officenavigation.Constants.C;
+import com.richard.officenavigation.constants.C;
 import com.richard.officenavigation.dao.IBeacon;
 import com.richard.officenavigation.dao.IMap;
 import com.richard.officenavigation.dao.IMapDao;
@@ -36,7 +38,7 @@ public class IMapAdapter implements BaseMapAdapter {
 			mMap.setId(C.map.DEFAULT_MAP_ID);
 		}
 	}
-
+	
 	private IMap getMap(Long id) {
 		IMap map = null;
 		IMapDao mapDao = SingletonDaoSession.getInstance(mCtx).getIMapDao();
@@ -103,7 +105,7 @@ public class IMapAdapter implements BaseMapAdapter {
 		if (mINodeViews.isEmpty() && getType() != ASSETS_MAP) {
 			List<INode> nodes = mMap.getNodes();
 			for (INode node : nodes) {
-				if (node.getVisible() == true) {
+				if (node.isVisible() == true) {
 					TextView tv = new TextView(mCtx);
 					tv.setTextSize(9);
 					tv.setTextColor(mCtx.getResources().getColor(

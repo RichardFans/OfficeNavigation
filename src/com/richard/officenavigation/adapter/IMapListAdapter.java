@@ -14,7 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.richard.officenavigation.Constants.C;
+import com.richard.officenavigation.constants.C;
 import com.richard.officenavigation.dao.IMap;
 
 public class IMapListAdapter extends BaseAdapter {

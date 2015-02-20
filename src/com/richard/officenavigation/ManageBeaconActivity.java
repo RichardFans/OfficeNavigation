@@ -12,12 +12,12 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 
 import com.qozix.tileview.markers.MarkerEventListener;
-import com.richard.officenavigation.Constants.C;
 import com.richard.officenavigation.adapter.IMapAdapter;
 import com.richard.officenavigation.callout.AddBeaconCallout;
 import com.richard.officenavigation.callout.AddBeaconCallout.onConfirmBeaconAddListener;
 import com.richard.officenavigation.callout.DelBeaconCallout;
 import com.richard.officenavigation.callout.DelBeaconCallout.onConfirmBeaconDelListener;
+import com.richard.officenavigation.constants.C;
 import com.richard.officenavigation.dao.IBeacon;
 import com.richard.officenavigation.dao.IBeaconDao;
 import com.richard.officenavigation.dao.DaoSession;
@@ -74,12 +74,12 @@ public class ManageBeaconActivity extends BaseActivity implements
 		mTileMap.addMarkerEventListener(mDelBeaconMarkerListener);
 	}
 
-	private void handleActionAddNode() {
+	private void handleActionAddBeacon() {
 		getActionBar().setTitle(R.string.action_add_beacon);
 		mTileMap.setOnTouchListener(this);
 	}
 
-	private void handleActionDelNode() {
+	private void handleActionDelBeacon() {
 		getActionBar().setTitle(R.string.action_del_beacon);
 		mTileMap.addMarkerEventListener(mDelBeaconMarkerListener);
 	}
@@ -118,10 +118,10 @@ public class ManageBeaconActivity extends BaseActivity implements
 			mPrevItem = item;
 			switch (item.getItemId()) {
 			case R.id.action_add_beacon:
-				handleActionAddNode();
+				handleActionAddBeacon();
 				break;
 			case R.id.action_del_beacon:
-				handleActionDelNode();
+				handleActionDelBeacon();
 				break;
 			case R.id.action_done:
 				handleActionDone();
@@ -188,10 +188,9 @@ public class ManageBeaconActivity extends BaseActivity implements
 								IBeaconDao.Properties.MapId.eq(mMap.getId()),
 								IBeaconDao.Properties.X.eq(beacon.getX()),
 								IBeaconDao.Properties.Y.eq(beacon.getY())),
-						beaconDao
-								.queryBuilder()
-								.and(IBeaconDao.Properties.MapId
-										.eq(mMap.getId()),
+						beaconDao.queryBuilder()
+								.and(IBeaconDao.Properties.MapId.eq(mMap
+										.getId()),
 										IBeaconDao.Properties.Uuid.eq(beacon
 												.getUuid()),
 										IBeaconDao.Properties.Major.eq(beacon
@@ -203,9 +202,9 @@ public class ManageBeaconActivity extends BaseActivity implements
 			return;
 		}
 
-		beaconDao.insert(beacon);
-		d("加入信标: " + uuid + "(" + major + ", " + minor + "), x, y = " + x
-				+ ", " + y);
+		long id = beaconDao.insert(beacon);
+		d("加入信标: " + "(id = " + id + ")" + uuid + "(" + major + ", " + minor
+				+ "), x, y = " + x + ", " + y);
 		// 添加一个mark
 		ImageView marker = new ImageView(this);
 		marker.setImageResource(R.drawable.map_beacon_icon);

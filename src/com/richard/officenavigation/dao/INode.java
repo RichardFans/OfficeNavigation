@@ -19,6 +19,7 @@ public class INode implements Comparable<INode> {
     /** Not-null value. */
     private String name;
     private boolean visible;
+    private boolean trained;
     private long mapId;
 
     /** Used to resolve relations */
@@ -27,6 +28,7 @@ public class INode implements Comparable<INode> {
     /** Used for active entity operations. */
     private transient INodeDao myDao;
 
+    private List<IRssi> rssis;
     private List<IPath> adjacencies;
 
     // KEEP FIELDS - put your custom fields here
@@ -41,12 +43,13 @@ public class INode implements Comparable<INode> {
         this.id = id;
     }
 
-    public INode(Long id, long x, long y, String name, boolean visible, long mapId) {
+    public INode(Long id, long x, long y, String name, boolean visible, boolean trained, long mapId) {
         this.id = id;
         this.x = x;
         this.y = y;
         this.name = name;
         this.visible = visible;
+        this.trained = trained;
         this.mapId = mapId;
     }
 
@@ -90,12 +93,20 @@ public class INode implements Comparable<INode> {
         this.name = name;
     }
 
-    public boolean getVisible() {
+    public boolean isVisible() {
         return visible;
     }
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public boolean isTrained() {
+        return trained;
+    }
+
+    public void setTrained(boolean trained) {
+        this.trained = trained;
     }
 
     public long getMapId() {
@@ -104,6 +115,28 @@ public class INode implements Comparable<INode> {
 
     public void setMapId(long mapId) {
         this.mapId = mapId;
+    }
+
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<IRssi> getRssis() {
+        if (rssis == null) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            IRssiDao targetDao = daoSession.getIRssiDao();
+            List<IRssi> rssisNew = targetDao._queryINode_Rssis(id);
+            synchronized (this) {
+                if(rssis == null) {
+                    rssis = rssisNew;
+                }
+            }
+        }
+        return rssis;
+    }
+
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetRssis() {
+        rssis = null;
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */

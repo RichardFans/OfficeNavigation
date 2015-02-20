@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.qozix.tileview.TileView;
 import com.richard.officenavigation.R;
 import com.richard.officenavigation.dao.INode;
-import com.richard.utils.Views;
 
 public class DelPathCallout extends BaseMapCallout {
 	private onConfirmPathDelListener mListener;

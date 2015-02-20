@@ -47,7 +47,37 @@
             android:theme="@style/ManageMap"
             android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
-
+        <activity
+            android:name=".TrainNodesActivity"
+            android:label="@string/action_locate_training"
+            android:theme="@style/ManageMap"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
+        </activity>
+        <activity
+            android:name=".AverageTrainingActivity"
+            android:label="@string/action_locate_training"
+            android:theme="@style/ManageMap"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
+        </activity>
+        <activity
+            android:name=".ProbabilityTrainingActivity"
+            android:label="@string/action_locate_training"
+            android:theme="@style/ManageMap"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
+        </activity>
+        <activity
+            android:name=".ViewAverageTrainingResult"
+            android:label="@string/action_view_training_result"
+            android:theme="@style/ManageMap"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
+        </activity>
+        <activity
+            android:name=".ViewProbabilityTrainingResult"
+            android:label="@string/action_view_training_result"
+            android:theme="@style/ManageMap"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
+        </activity>
+        
         <!-- START: android-beacon-library need -->
         <receiver android:name="org.altbeacon.beacon.startup.StartupBroadcastReceiver" >
             <intent-filter>

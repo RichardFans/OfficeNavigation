@@ -25,7 +25,7 @@ import android.widget.SimpleAdapter;
 
 import com.richard.officenavigation.MainActivity;
 import com.richard.officenavigation.R;
-import com.richard.officenavigation.Constants.C;
+import com.richard.officenavigation.constants.C;
 
 public class HomepageFragment extends TabPagerFragment implements
 		OnItemClickListener, OnClickListener {

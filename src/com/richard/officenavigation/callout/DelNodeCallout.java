@@ -42,13 +42,14 @@ public class DelNodeCallout extends BaseMapCallout {
 		mTvNodeName = new TextView(getContext());
 		mTvNodeName.setTextColor(0xFFFFFFFF);
 		mTvNodeName.setTextSize(12);
-		mTvNodeName.setText("名称：");
+		mTvNodeName.setText(getResources().getString(R.string.subtitle_name));
 		layout.addView(mTvNodeName);
 
 		mTvNodePos = new TextView(getContext());
 		mTvNodePos.setTextColor(0xFFFFFFFF);
 		mTvNodePos.setTextSize(12);
-		mTvNodeName.setText("位置：");
+		mTvNodeName.setText(getResources()
+				.getString(R.string.subtitle_position));
 		layout.addView(mTvNodePos, params);
 
 		Button confirmBtn = new Button(getContext());
@@ -84,22 +85,23 @@ public class DelNodeCallout extends BaseMapCallout {
 		 * 
 		 * @param callout
 		 *            显示弹窗
-		 * @param name
-		 *            添加node的名称
-		 * @param x
-		 *            添加node的x坐标（相对值）
-		 * @param y
-		 *            添加node的y坐标（相对值）
+		 * @param node
+		 *            要删除的node
 		 */
 		public void onConfirmNodeDel(View callout, INode node);
 	}
 
 	public void setNode(INode node) {
 		mNode = node;
-		String html = "名称：" + node.getName() + " <font color="
-				+ (node.getVisible() ? "'green'>" + "可见" : "'red'>" + "不可见")
+		String html = getResources().getString(R.string.subtitle_name)
+				+ node.getName()
+				+ " <font color="
+				+ (node.isVisible() ? "'green'>"
+						+ getResources().getString(R.string.visible) : "'red'>"
+						+ getResources().getString(R.string.invisible))
 				+ "</font>";
 		mTvNodeName.setText(Html.fromHtml(html), TextView.BufferType.SPANNABLE);
-		mTvNodePos.setText("位置：" + node.getX() + ", " + node.getY());
+		mTvNodePos.setText(getResources().getString(R.string.subtitle_position)
+				+ node.getX() + ", " + node.getY());
 	}
 }

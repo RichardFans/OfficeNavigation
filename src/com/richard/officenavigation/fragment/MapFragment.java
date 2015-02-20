@@ -1,9 +1,16 @@
 package com.richard.officenavigation.fragment;
 
+import jama.Matrix;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import jkalman.JKalman;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.Region;
@@ -18,15 +25,24 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
 import android.graphics.PathEffect;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.SparseArray;
+import android.util.SparseIntArray;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.qozix.tileview.paths.DrawablePath;
@@ -36,13 +52,16 @@ import com.richard.officenavigation.ManageMapActivity;
 import com.richard.officenavigation.OfficeNaviApplication;
 import com.richard.officenavigation.OfficeNaviApplication.onRangeBeaconsInRegionListener;
 import com.richard.officenavigation.R;
-import com.richard.officenavigation.Constants.C;
-import com.richard.officenavigation.adapter.BaseMapAdapter;
+import com.richard.officenavigation.TrainNodesActivity;
 import com.richard.officenavigation.adapter.IMapAdapter;
 import com.richard.officenavigation.callout.FindPathCallout;
 import com.richard.officenavigation.callout.FindPathCallout.onConfirmPathListener;
+import com.richard.officenavigation.constants.C;
+import com.richard.officenavigation.dao.DaoSession;
 import com.richard.officenavigation.dao.IBeacon;
+import com.richard.officenavigation.dao.ICluster;
 import com.richard.officenavigation.dao.INode;
+import com.richard.officenavigation.dao.SingletonDaoSession;
 import com.richard.officenavigation.dialog.DirectoryChooserDialog;
 import com.richard.officenavigation.dialog.DirectoryChooserDialog.OnConfirmDirectoryChooseListener;
 import com.richard.officenavigation.dialog.MapChooserDialog;
@@ -53,14 +72,19 @@ import com.richard.officenavigation.findpath.Dijkstra;
 import com.richard.officenavigation.view.CircleManager.DrawableCircle;
 import com.richard.officenavigation.view.DespoticTileView;
 import com.richard.officenavigation.view.MapTileView.onNodeClickListener;
+import com.richard.utils.Maths;
+import com.richard.utils.Misc;
 import com.richard.utils.Views;
 
 public class MapFragment extends TabPagerFragment implements
 		OnConfirmDirectoryChooseListener, onConfirmSettingListener,
 		onMapSelectedListener, onNodeClickListener, onConfirmPathListener,
-		onRangeBeaconsInRegionListener {
+		onRangeBeaconsInRegionListener, SensorEventListener {
 	private static final int REQ_CREATE_MAP = 1;
 	private static final int REQ_MANAGE_MAP = 2;
+
+	protected static final int SMALL_SCALE_THRESHOLD = 2200;
+
 	private DespoticTileView mTileMap;
 	private DirectoryChooserDialog mDlgChooseMapDir;
 	private MapParamsSetterDialog mDlgMapParamsSetter;
@@ -68,6 +92,7 @@ public class MapFragment extends TabPagerFragment implements
 
 	private ImageView mIvFrom;
 	private ImageView mIvTo;
+	private ImageView mIvSelf;
 	private FindPathCallout mCalloutFindPath;
 	private Dijkstra mAlgorithmFindPath;
 	private DrawablePath mDrawPath, mDrawPathArrow;
@@ -77,6 +102,104 @@ public class MapFragment extends TabPagerFragment implements
 	private SparseArray<DrawableCircle> mMapBeaconCircle;
 
 	private Bundle mExtraData;
+
+	private int mXVal;
+	private SparseArray<DataForKalman> mBeaconsDataForKalman;
+	private SparseIntArray mBeaconsDataCorrected;
+
+	private List<ICluster> mClusterList;
+
+	private Handler mHandler;
+	private INode mLastNodeFind;
+	private Runnable mRunnable = new Runnable() {
+
+		@Override
+		public void run() {
+			Map<Integer, Integer> datas = Misc.findBiggestDatas(
+					mBeaconsDataCorrected, C.map.DISTRIBUTION_K_VAL);
+			Map<Integer, Integer> kDatas = datas;
+			Map<Integer, Integer> qDatas = new HashMap<>();
+			int i = 0;
+			for (Entry<Integer, Integer> e : kDatas.entrySet()) {
+				if (++i > C.map.CLUSTER_Q_VAL)
+					break;
+				qDatas.put(e.getKey(), e.getValue());
+			}
+
+			List<ICluster> matchedClusters = Misc.findMatchedClusters(qDatas,
+					mClusterList);
+			INode nodeFind = Misc.findNearestNode(getActivity(),
+					matchedClusters, mCurOri, kDatas);
+			if (nodeFind != null) {
+				// 如果找到了合适的节点，还要和之前找到的节点比较，两个节点不能相差得太远，
+				// 否则认为是小尺度误差，需要进一步进行修正
+				if (mLastNodeFind != null) {
+					double dD = Maths.distance(mLastNodeFind.getX(),
+							mLastNodeFind.getY(), nodeFind.getX(),
+							nodeFind.getY());
+					if (dD > SMALL_SCALE_THRESHOLD) {
+						// 只补偿最强的信号值，取最强信号值的+4%/-4%
+						int key = kDatas.keySet().iterator().next();
+						int value = kDatas.get(key);
+						int dy = Math.round(value / 25);
+
+						kDatas.put(key, value - dy);
+						INode nodeFindMinus = Misc
+								.findNearestNode(getActivity(),
+										matchedClusters, mCurOri, kDatas);
+
+						kDatas.put(key, value + dy);
+						INode nodeFindPlus = Misc
+								.findNearestNode(getActivity(),
+										matchedClusters, mCurOri, kDatas);
+
+						double mD = Maths.distance(mLastNodeFind.getX(),
+								mLastNodeFind.getY(), nodeFindMinus.getX(),
+								nodeFindMinus.getY());
+						double pD = Maths.distance(mLastNodeFind.getX(),
+								mLastNodeFind.getY(), nodeFindPlus.getX(),
+								nodeFindPlus.getY());
+						if (mD > pD) {
+							if (pD < dD) {
+								nodeFind = nodeFindPlus;
+							}
+						} else {
+							if (mD < dD) {
+								nodeFind = nodeFindMinus;
+							}
+						}
+					}
+				}
+				if (mLastNodeFind != nodeFind) {
+					mLastNodeFind = nodeFind;
+					mTileMap.removeMarker(mIvSelf);
+					mTileMap.addMarker(mIvSelf, getX(nodeFind), getY(nodeFind),
+							-0.5f, -1.0f);
+				}
+				// d("===============>");
+				// for (IRssi r : nodeFind.getRssis()) {
+				// if (r.getOrientation() == mCurOri) {
+				// double y = r.getValue();
+				// double y0 = mBeaconsDataCorrected.get((int) r
+				// .getBeaconId());
+				// d("beacon(" + r.getBeaconId() + ", nodeId = "
+				// + nodeFind.getId() + "): y = " + y + ", y0 = "
+				// + y0);
+				// }
+				// }
+			}
+
+			mHandler.postDelayed(this, 2000);
+		}
+	};
+	// 方向相关
+	private SensorManager mSensorManager;
+	private float[] aValues = new float[3];
+	private float[] mValues = new float[3];
+	private int rotation;
+
+	private float currentDegree = 0f;
+	private int mCurOri;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,17 +223,12 @@ public class MapFragment extends TabPagerFragment implements
 		mTileMap.setupMapDefault(true);
 		mTileMap.setOnNodeClickListener(this);
 
-		mMapBeacon = new SparseArray<>();
-		List<IBeacon> beacons = adapter.getIBeacons();
-		for (IBeacon beacon : beacons) {
-			mMapBeacon.put(beacon.getMinor(), beacon);
-		}
-		mMapBeaconCircle = new SparseArray<>();
-
 		mIvFrom = new ImageView(getActivity());
 		mIvFrom.setImageResource(R.drawable.find_path_start);
 		mIvTo = new ImageView(getActivity());
 		mIvTo.setImageResource(R.drawable.find_path_end);
+		mIvSelf = new ImageView(getActivity());
+		mIvSelf.setImageResource(R.drawable.map_node_icon);
 
 		mCalloutFindPath = new FindPathCallout(getActivity(), mTileMap);
 		mCalloutFindPath.setOnConfirmPathListener(this);
@@ -137,6 +255,32 @@ public class MapFragment extends TabPagerFragment implements
 		mPaintArrow.setAntiAlias(true);
 		mPaintArrow.setShadowLayer(dp(3), dp(3), dp(3), 0x88000000);
 		mPaintArrow.setPathEffect(new CornerPathEffect(5));
+
+		// 方向
+		mSensorManager = (SensorManager) getActivity().getSystemService(
+				Context.SENSOR_SERVICE);
+		WindowManager wm = (WindowManager) getActivity().getSystemService(
+				Context.WINDOW_SERVICE);
+		Display display = wm.getDefaultDisplay();
+		rotation = display.getRotation();
+		updateOrientation(new float[] { 0, 0, 0 });
+
+		mMapBeacon = new SparseArray<>();
+		List<IBeacon> beacons = adapter.getIBeacons();
+		for (IBeacon beacon : beacons) {
+			mMapBeacon.put(beacon.getMinor(), beacon);
+		}
+		mMapBeaconCircle = new SparseArray<>();
+		mBeaconsDataForKalman = new SparseArray<>();
+		mBeaconsDataCorrected = new SparseIntArray();
+		mClusterList = loadAllClusters();
+		mHandler = new Handler();
+		mHandler.postDelayed(mRunnable, 5000);
+	}
+
+	private List<ICluster> loadAllClusters() {
+		DaoSession session = SingletonDaoSession.getInstance(getActivity());
+		return session.getIClusterDao().loadAll();
 	}
 
 	private void createDialog() {
@@ -188,15 +332,60 @@ public class MapFragment extends TabPagerFragment implements
 	@Override
 	public void onRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
 		if (beacons.size() > 0) {
+			mBeaconsDataCorrected.clear();
 			for (Beacon beacon : beacons) {
-				d("Beacon " + beacon.toString() + " is about "
-						+ beacon.getDistance() + " meters away, with Rssi: "
-						+ beacon.getRssi());
-				updateBeaconCircle(beacon);
+				int minor = beacon.getId3().toInt();
+				DataForKalman beaconDataForKalman = mBeaconsDataForKalman
+						.get(minor);
+				if (null == beaconDataForKalman) {
+					beaconDataForKalman = new DataForKalman();
+					mBeaconsDataForKalman.put(minor, beaconDataForKalman);
+				}
+
+				if (beacon.getRssi() < 0) {
+					int corrected = ftKalman(beaconDataForKalman,
+							beacon.getRssi());
+					mBeaconsDataCorrected.put(minor, corrected);
+				}
 			}
+			mXVal++;
 		}
 	}
 
+	private int ftKalman(DataForKalman beaconDataForKalman, int observedValue) {
+		// 插值
+		int xLast = beaconDataForKalman.xVal;
+		int yLast = beaconDataForKalman.yVal;
+		int xVal = mXVal;
+		int yVal = observedValue;
+		ArrayList<Integer> datas = new ArrayList<>();
+		// 插值
+		if (xLast > 0) {
+			if (xVal > xLast + 1) {
+				int dy = (yVal - yLast) / (xVal - xLast);
+				for (int j = 1; j < xVal - xLast; j++)
+					datas.add(yLast + dy * j);
+			}
+		} else {
+			for (int j = 0; j < xVal; j++)
+				datas.add(yVal);
+		}
+		datas.add(yVal);
+		// 滤波
+		if (xLast == 0) {
+			beaconDataForKalman.setInitState(datas.get(0));
+			datas.remove(0);
+		}
+		for (int d : datas) {
+			beaconDataForKalman.iterate(d);
+		}
+		// 更新
+		beaconDataForKalman.xVal = mXVal;
+		beaconDataForKalman.yVal = observedValue;
+		return beaconDataForKalman.getCorrectedData();
+	}
+
+	@SuppressWarnings("unused")
 	private void updateBeaconCircle(final Beacon beacon) {
 		getActivity().runOnUiThread(new Runnable() {
 			public void run() {
@@ -218,17 +407,32 @@ public class MapFragment extends TabPagerFragment implements
 	@Override
 	public void onPause() {
 		super.onPause();
+		// 信标
 		((OfficeNaviApplication) this.getActivity().getApplication())
 				.setOnRangeBeaconsInRegionListener(null);
+		// 方向
+		mSensorManager.unregisterListener(this);
+		// 地图
 		mTileMap.clear();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		mTileMap.resume();
+		// 信标
 		((OfficeNaviApplication) this.getActivity().getApplication())
 				.setOnRangeBeaconsInRegionListener(this);
+		// 方向
+		Sensor aSensor = mSensorManager
+				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		Sensor mSensor = mSensorManager
+				.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+		mSensorManager.registerListener(this, aSensor,
+				SensorManager.SENSOR_DELAY_GAME);
+		mSensorManager.registerListener(this, mSensor,
+				SensorManager.SENSOR_DELAY_GAME);
+		// 地图
+		mTileMap.resume();
 	}
 
 	@Override
@@ -238,6 +442,7 @@ public class MapFragment extends TabPagerFragment implements
 			mTileMap.destroy();
 			mTileMap = null;
 		}
+		mHandler.removeCallbacks(mRunnable);
 	}
 
 	@Override
@@ -257,8 +462,86 @@ public class MapFragment extends TabPagerFragment implements
 		case R.id.action_set_beacon:
 			handleSetBeacon();
 			break;
+		case R.id.action_locate_training:
+			handleLocateTraining();
+			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+			mValues = event.values;
+		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+			aValues = event.values;
+		updateOrientation(calculateOrientation());
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+	}
+
+	private float[] calculateOrientation() {
+		float[] values = new float[3];
+		float[] inR = new float[9];
+		float[] outR = new float[9];
+		// Determine the rotation matrix
+		SensorManager.getRotationMatrix(inR, null, aValues, mValues);
+		// Remap the coordinates based on the natural device orientation.
+		int x_axis = SensorManager.AXIS_X;
+		int y_axis = SensorManager.AXIS_Y;
+		switch (rotation) {
+		case (Surface.ROTATION_90):
+			x_axis = SensorManager.AXIS_Y;
+			y_axis = SensorManager.AXIS_MINUS_X;
+			break;
+		case (Surface.ROTATION_180):
+			y_axis = SensorManager.AXIS_MINUS_Y;
+			break;
+		case (Surface.ROTATION_270):
+			x_axis = SensorManager.AXIS_MINUS_Y;
+			y_axis = SensorManager.AXIS_X;
+			break;
+		default:
+			break;
+		}
+		SensorManager.remapCoordinateSystem(inR, x_axis, y_axis, outR);
+		// Obtain the current, corrected orientation.
+		SensorManager.getOrientation(outR, values);
+		// Convert from Radians to Degrees.
+		values[0] = (float) Math.toDegrees(values[0]);
+		values[1] = (float) Math.toDegrees(values[1]);
+		values[2] = (float) Math.toDegrees(values[2]);
+		return values;
+	}
+
+	private void updateOrientation(float[] values) {
+		float degree = Math.round(values[0]);
+		if (-degree != currentDegree) {
+			degreeToOrientation(degree);
+			currentDegree = -degree;
+		}
+	}
+
+	private String degreeToOrientation(float degree) {
+		int oriStringId = 0;
+		if (degree >= -45 && degree < 45) {
+			oriStringId = R.string.ori_north;
+			mCurOri = C.map.ORIENT_NORTH;
+		} else if (degree >= 45 && degree <= 135) {
+			oriStringId = R.string.ori_east;
+			mCurOri = C.map.ORIENT_EAST;
+		} else if ((degree >= 135 && degree <= 180) || (degree) >= -180
+				&& degree < -135) {
+			oriStringId = R.string.ori_sorth;
+			mCurOri = C.map.ORIENT_SORTH;
+		} else if (degree >= -135 && degree < -45) {
+			oriStringId = R.string.ori_west;
+			mCurOri = C.map.ORIENT_WEST;
+		}
+		return getActivity().getString(oriStringId);
 	}
 
 	private void handleSetBeacon() {
@@ -268,6 +551,17 @@ public class MapFragment extends TabPagerFragment implements
 		mExtraData.clear();
 		mExtraData.putLong(C.map.EXTRA_SELECTED_MAP_ID, id);
 		Intent intent = new Intent(getActivity(), ManageBeaconActivity.class);
+		intent.putExtras(mExtraData);
+		startActivity(intent);
+	}
+
+	private void handleLocateTraining() {
+		SharedPreferences sp = getActivity().getSharedPreferences(
+				C.PREFERENCES_MANAGE, Context.MODE_PRIVATE);
+		Long id = sp.getLong(C.map.KEY_CURRENT_MAPID, C.map.DEFAULT_MAP_ID);
+		mExtraData.clear();
+		mExtraData.putLong(C.map.EXTRA_SELECTED_MAP_ID, id);
+		Intent intent = new Intent(getActivity(), TrainNodesActivity.class);
 		intent.putExtras(mExtraData);
 		startActivity(intent);
 	}
@@ -430,4 +724,43 @@ public class MapFragment extends TabPagerFragment implements
 		return Views.dip2px(getActivity(), dp);
 	}
 
+	class DataForKalman {
+		int xVal;
+		int yVal;
+		Matrix s; // state [y, dy]
+		Matrix c; // corrected state [y, dy]
+		Matrix m; // measurement [x]
+		JKalman kalman;
+
+		public DataForKalman() {
+			try {
+				kalman = new JKalman(2, 1);
+				s = new Matrix(2, 1); // state [y, dy]
+				c = new Matrix(2, 1); // corrected state [y, dy]
+				m = new Matrix(1, 1); // measurement [x]
+				double[][] tr = { { 1, 1 }, { 0, 1 } };
+				kalman.setTransition_matrix(new Matrix(tr));
+				kalman.setError_cov_post(kalman.getError_cov_post().identity());
+			} catch (Exception e) {
+				e.printStackTrace();
+				e("DataForKalman");
+			}
+		}
+
+		public void setInitState(int rssi) {
+			// 设置初始状态
+			s.set(0, 0, rssi);
+			s.set(0, 0, 0);
+		}
+
+		public void iterate(int rssi) {
+			s = kalman.Predict();
+			m.set(0, 0, rssi);
+			c = kalman.Correct(m);
+		}
+
+		public int getCorrectedData() {
+			return (int) c.get(0, 0);
+		}
+	}
 }

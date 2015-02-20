@@ -7,25 +7,28 @@
     <string name="action_add_contact">添加联系人</string>
     <string name="action_search">搜索</string>
     <string name="action_add_goods">添加物品</string>
-    <string name="action_set_beacon">设置beacon</string>
     <string name="action_add_map">新建地图</string>
-    <string name="action_manage_map">地图管理</string>
+    <string name="action_manage_map">管理地图</string>
     <string name="action_add_node">添加节点</string>
     <string name="action_del_node">删除节点</string>
     <string name="action_add_path">添加路径</string>
     <string name="action_del_path">删除路径</string>
-    <string name="action_manage_beacon">信标管理</string>
+    <string name="action_manage_beacon">管理信标</string>
     <string name="action_add_beacon">添加信标</string>
     <string name="action_del_beacon">删除信标</string>
-    <string name="action_mod_beacon">修改信标</string>
+    <string name="action_locate_training">定位训练</string>
+    <string name="action_view_training_result">查看训练结果</string>
     <string name="action_prev_step">上一步</string>
     <string name="action_next_step">下一步</string>
     <string name="action_set_cur_map">使用该地图</string>
     <string name="action_done">完成</string>
+    <string name="action_filter">滤波</string>
 
     <!-- 对话框 -->
     <string name="title_select_method">选择操作</string>
     <string name="title_set_map_size">设置所选地图的原始尺寸</string>
+    <string name="title_bluetooth_not_enable">蓝牙未开启</string>
+    <string name="msg_bluetooth_should_enable">请到设置中开启蓝牙，然后重启该应用程序</string>
     <string name="map_width_px">像素宽度</string>
     <string name="map_height_px">像素高度</string>
     <string name="mm_px_scale">尺寸像素比</string>
@@ -47,6 +50,15 @@
     <string name="title_path_to">选为终点</string>
     <string name="title_node_info">节点信息</string>
     <string name="title_beacon_info">信标信息</string>
+    <string name="title_training_node">训练节点</string>
+    
+    <string name="subtitle_name">名称：</string>
+    <string name="subtitle_position">位置：</string>
+    <string name="visible">可见</string>
+    <string name="invisible">不可见</string>
+    <string name="trained">已训练</string>
+    <string name="not_trained">未训练</string>
+    
     <string name="cb_visible">节点可见</string>
     <string name="beacon_label_uuid">UUID</string>
     <string name="beacon_uuid_part1">E2C56DB5</string>
@@ -60,9 +72,34 @@
     <string name="beacon_minor">0001</string>
     <string name="beacon_uuid_separator">-</string>
 
+    <string name="btn_view_result">查看结果</string>
+    <string name="btn_train">训练</string>
+    <string name="btn_retrain">重新训练</string>
+
     <!-- 地图管理 -->
     <string name="create_map">创建地图</string>
-
+    <string name="subtitle_heading">目前朝向：</string>
+    <string name="ori_sorth">南</string>
+    <string name="ori_north">北</string>
+    <string name="ori_east">东</string>
+    <string name="ori_west">西</string>
+    <string name="ori_northwest">西北</string>
+    <string name="ori_northeast">东北</string>
+    <string name="ori_sorthwest">西南</string>
+    <string name="ori_sortheast">东南</string>
+    <string name="title_training_orientation">训练方向</string>
+    <string name="title_training_time">训练时间</string>
+    <string name="title_training_count_down">剩余时间</string>
+    <string name="unit_sec">秒</string>
+    <string name="action_start">开始</string>
+    <string name="action_continue">继续</string>
+    <string name="beacon">信标</string>
+    <string name="raw_datas">原始数据</string>
+    <string name="kalman_datas">卡尔曼滤波结果</string>
+    <string name="gaussian_datas">高斯滤波结果</string>
+    <string name="wavelet_datas">小波处理滤波结果</string>
+    <string name="result_datas">最终结果</string>
+    
     <!-- 管理界面 -->
     <string name="title_software_setting">软件设置</string>
     <string name="boot_start">开机启动</string>

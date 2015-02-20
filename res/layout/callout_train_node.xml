@@ -1,0 +1,87 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp" >
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:text="@string/title_training_node"
+        android:textColor="@color/white_text"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/tv_title_name"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title"
+        android:labelFor="@+id/edit_uuid_part1"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp"
+        android:text="@string/subtitle_name"
+        android:textColor="@color/white_text"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title"
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/tv_title_name"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp"
+        android:textColor="@color/white_text"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_title_position"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title_name"
+        android:labelFor="@+id/edit_uuid_part1"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp"
+        android:text="@string/subtitle_position"
+        android:textColor="@color/white_text"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title_name"
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@+id/tv_title_position"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp"
+        android:textColor="@color/white_text"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/btn_view_result"
+        android:layout_width="108dp"
+        android:layout_height="36dp"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tv_title_position"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/btn_possitive"
+        android:text="@string/btn_view_result" />
+
+    <Button
+        android:id="@+id/btn_training"
+        android:layout_width="108dp"
+        android:layout_height="36dp"
+        android:layout_below="@+id/btn_view_result"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/btn_possitive"
+        android:text="@string/btn_train" />
+
+</RelativeLayout>

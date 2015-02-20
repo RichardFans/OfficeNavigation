@@ -7,6 +7,7 @@
     <color name="black_text">#121</color>
     <color name="blue_text">#3dd</color>
     <color name="white_text">#eee</color>
+    <color name="dark_red_text">#8b0000</color>
 
     
     <color name="dark_gray_bk">#333</color>

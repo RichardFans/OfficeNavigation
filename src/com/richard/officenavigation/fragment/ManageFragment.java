@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 
 import com.richard.officenavigation.R;
-import com.richard.officenavigation.Constants.C;
+import com.richard.officenavigation.constants.C;
 
 public class ManageFragment extends TabPagerFragment implements OnClickListener {
 

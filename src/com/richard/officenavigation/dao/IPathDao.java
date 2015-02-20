@@ -50,7 +50,7 @@ public class IPathDao extends AbstractDao<IPath, Long> {
 
     /** Creates the underlying database table. */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
-        String constraint = ifNotExists? "IF NOT EXISTS ": "";
+        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "'IPATH' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'FROM' INTEGER NOT NULL ," + // 1: from
